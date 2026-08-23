@@ -7,7 +7,7 @@ ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 -- Crear el Frame principal
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 200, 0, 300)
-MainFrame.Position = UDim2.new(0.75, 0, 0.1, 0) -- <--- Movido más arriba (0.1 en lugar de 0.2)
+MainFrame.Position = UDim2.new(0.75, 0, 0.05, 0) -- <--- Subido a 0.05 (más arriba)
 MainFrame.BackgroundTransparency = 1 
 MainFrame.Parent = ScreenGui
 
@@ -38,10 +38,10 @@ local botonesData = {
 	{"BAT TP", function() print("Has pulsado BAT TP") end}
 }
 
--- Función para crear botones (ahora más cuadrados)
+-- Función para crear botones cuadrados
 local function crearBoton(nombre, funcion, x, y)
 	local boton = Instance.new("TextButton")
-	boton.Size = UDim2.new(0, 80, 0, 40) -- <--- Más cuadrado (80 de ancho, 40 de alto)
+	boton.Size = UDim2.new(0, 80, 0, 40) -- Tamaño cuadrado
 	boton.Position = UDim2.new(0, x, 0, y)
 	boton.Text = nombre
 	boton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -50,9 +50,9 @@ local function crearBoton(nombre, funcion, x, y)
 	boton.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
 	boton.Parent = MainFrame
 	
-	-- Esquinas totalmente rectas
+	-- Esquinas en ángulo recto (cuadrados perfectos)
 	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 0) -- <--- Eliminado el redondeo para que sea cuadrado
+	corner.CornerRadius = UDim.new(0, 0) 
 	corner.Parent = boton
 	
 	boton.MouseButton1Click:Connect(funcion)
@@ -62,7 +62,7 @@ end
 
 -- Posicionar los botones
 local startX, startY = 0, 0
-local gapX, gapY = 90, 45 -- <--- Más separación vertical para los botones cuadrados
+local gapX, gapY = 90, 45
 
 for i, data in ipairs(botonesData) do
 	local nombre, funcion = data[1], data[2]
