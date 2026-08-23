@@ -1,6 +1,6 @@
 -- ==========================================
---  SCRIPT: FORCE HUB V6
---  Botones columna derecha + force.vs arrastrable (Izquierda)
+--  SCRIPT: FORCE HUB V7
+--  force.vs arrastrable + Configuración Speed/Combat + Botón Carry Speed
 -- ==========================================
 
 local Players = game:GetService("Players")
@@ -23,27 +23,24 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ==========================================
---  BOTONES EN COLUMNA DERECHA (COMPLETOS)
+--  BOTONES EN COLUMNA DERECHA
 -- ==========================================
 
--- Función para crear los botones de la derecha con tamaño completo
 local function CreateButton(name, text, row)
 	local button = Instance.new("TextButton")
 	button.Name = name
-	button.Size = UDim2.new(0, 100, 0, 70) -- Más ancho (100px) y alto (70px)
+	button.Size = UDim2.new(0, 100, 0, 70)
 	
-	-- Posición: Pegado a la derecha, empezando desde muy arriba
-	local xOffset = -120 
-	local yOffset = 10 + (row * 80) -- Inicia en Y=10 (arriba)
+	local xOffset = -120
+	local yOffset = 10 + (row * 80)
 	
 	button.Position = UDim2.new(1, xOffset, 0, yOffset)
-	
 	button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 	button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-	button.BorderSizePixel = 2 
+	button.BorderSizePixel = 2
 	button.TextColor3 = Color3.fromRGB(255, 255, 255)
 	button.Font = Enum.Font.GothamBold
-	button.TextSize = 13 -- Texto un poco más grande para que se vea mejor
+	button.TextSize = 13
 	button.Text = text
 	button.TextWrapped = true
 	button.AutoButtonColor = true
@@ -51,23 +48,23 @@ local function CreateButton(name, text, row)
 	return button
 end
 
--- Crear botones (Fila 0, 1, 2...)
+-- Columna derecha
 local DropBtn = CreateButton("DropBtn", "DROP", 0)
 local SaltoBtn = CreateButton("SaltoBtn", "SALTO", 1)
 local TPBtn = CreateButton("TPBtn", "TP DOWN", 2)
 local VolarBtn = CreateButton("VolarBtn", "VOLAR", 3)
-local ResetBtn = CreateButton("ResetBtn", "RESET", 4)
-local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 5)
+local CarrySpeedBtn = CreateButton("CarrySpeedBtn", "CARRY SPEED", 4) -- Nuevo botón exterior
+local ResetBtn = CreateButton("ResetBtn", "RESET", 5)
+local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 6)
 
 -- ==========================================
---  BOTÓN "FORCE.VS" (IZQUIERDA, ARRASTRABLE)
+--  BOTÓN "FORCE.VS" (ARRASTRABLE)
 -- ==========================================
 
 local ForceVsBtn = Instance.new("TextButton")
 ForceVsBtn.Name = "ForceVsBtn"
 ForceVsBtn.Size = UDim2.new(0, 110, 0, 45)
--- Posición inicial: Debajo del logo de Roblox (esquina izquierda arriba)
-ForceVsBtn.Position = UDim2.new(0, 15, 0, 65) 
+ForceVsBtn.Position = UDim2.new(0, 15, 0, 65)
 ForceVsBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ForceVsBtn.BorderColor3 = Color3.fromRGB(255, 255, 255)
 ForceVsBtn.BorderSizePixel = 2
@@ -77,15 +74,13 @@ ForceVsBtn.TextSize = 16
 ForceVsBtn.Text = "force.vs"
 ForceVsBtn.Parent = ScreenGui
 
--- FUNCIÓN PARA ARRASTRAR EL BOTÓN FORCE.VS
+-- Función para arrastrar
 local dragging, dragInput, startPos, startPos2
-
 ForceVsBtn.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 		dragging = true
 		startPos = input.Position
 		startPos2 = ForceVsBtn.Position
-		
 		input.Changed:Connect(function()
 			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 				dragInput = input
@@ -111,14 +106,22 @@ UserInputService.InputEnded:Connect(function(input)
 	end
 end)
 
+-- Al hacer clic (si no está arrastrando) abre el panel
+ForceVsBtn.MouseButton1Click:Connect(function()
+	if not dragging then
+		ConfigPanel.Visible = not ConfigPanel.Visible
+	end
+end)
+
 -- ==========================================
---  PANEL DE CONFIGURACIÓN (SPEED Y CARRY SPEED)
+--  PANEL DE CONFIGURACIÓN (SPEED Y COMBAT)
 -- ==========================================
 
+-- Panel principal
 local ConfigPanel = Instance.new("Frame")
 ConfigPanel.Name = "ConfigPanel"
-ConfigPanel.Size = UDim2.new(0, 200, 0, 170)
-ConfigPanel.Position = UDim2.new(0, 160, 0, 100) -- Aparece cerca del botón force.vs
+ConfigPanel.Size = UDim2.new(0, 220, 0, 230)
+ConfigPanel.Position = UDim2.new(0, 160, 0, 100)
 ConfigPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 ConfigPanel.BorderColor3 = Color3.fromRGB(255, 255, 255)
 ConfigPanel.BorderSizePixel = 2
@@ -134,7 +137,7 @@ ConfigTitle.Font = Enum.Font.GothamBold
 ConfigTitle.TextSize = 14
 ConfigTitle.Parent = ConfigPanel
 
--- Función para crear los apartados de configuración
+-- Función genérica para crear apartados con cajas y botones +/-
 local function CreateConfigRow(yPos, labelText)
 	local Label = Instance.new("TextLabel")
 	Label.Size = UDim2.new(0, 80, 0, 25)
@@ -153,7 +156,7 @@ local function CreateConfigRow(yPos, labelText)
 	TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 	TextBox.Font = Enum.Font.GothamBold
 	TextBox.TextSize = 14
-	TextBox.Text = "16"
+	TextBox.Text = "30"
 	TextBox.Parent = ConfigPanel
 
 	local PlusBtn = Instance.new("TextButton")
@@ -177,14 +180,33 @@ local function CreateConfigRow(yPos, labelText)
 	return Label, TextBox, PlusBtn, MinusBtn
 end
 
--- Crear filas
+-- Apartado SPEED (Y = 40) y CARRY SPEED (Y = 75)
 local _, SpeedBox, SpeedPlus, SpeedMinus = CreateConfigRow(40, "Speed")
 local _, CarrySpeedBox, CarryPlus, CarryMinus = CreateConfigRow(75, "Carry Speed")
+
+-- ==========================================
+--  APARTADO "COMBAT" Y SUB-APARTADOS
+-- ==========================================
+
+-- Título del apartado Combat
+local CombatLabel = Instance.new("TextLabel")
+CombatLabel.Size = UDim2.new(1, 0, 0, 20)
+CombatLabel.Position = UDim2.new(0, 0, 0, 110)
+CombatLabel.BackgroundTransparency = 1
+CombatLabel.Text = "COMBAT"
+CombatLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+CombatLabel.Font = Enum.Font.GothamBold
+CombatLabel.TextSize = 14
+CombatLabel.Parent = ConfigPanel
+
+-- Sub-apartados dentro de Combat
+local _, CombatSpeedBox, CombatSpeedPlus, CombatSpeedMinus = CreateConfigRow(135, "Speed")
+local _, CombatCarryBox, CombatCarryPlus, CombatCarryMinus = CreateConfigRow(170, "Carry Speed")
 
 -- Botón para cerrar el panel
 local CloseConfigBtn = Instance.new("TextButton")
 CloseConfigBtn.Size = UDim2.new(0, 80, 0, 20)
-CloseConfigBtn.Position = UDim2.new(0.5, -40, 0, 115)
+CloseConfigBtn.Position = UDim2.new(0.5, -40, 0, 205)
 CloseConfigBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 CloseConfigBtn.Text = "CERRAR"
 CloseConfigBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -203,61 +225,95 @@ local function ClampAndSet(textBox)
 		textBox.Text = tostring(num)
 		return num
 	end
-	return 16
+	return 30
 end
 
+-- Speed principal (30 = normal)
 SpeedBox.FocusLost:Connect(function()
-	Humanoid.WalkSpeed = ClampAndSet(SpeedBox)
+	local val = ClampAndSet(SpeedBox)
+	-- Ajusta la velocidad directamente
+	Humanoid.WalkSpeed = val
 end)
 
 SpeedPlus.MouseButton1Click:Connect(function()
-	local current = tonumber(SpeedBox.Text) or 16
+	local current = tonumber(SpeedBox.Text) or 30
 	SpeedBox.Text = tostring(math.clamp(current + 1, 1, 60))
 	Humanoid.WalkSpeed = tonumber(SpeedBox.Text)
 end)
 
 SpeedMinus.MouseButton1Click:Connect(function()
-	local current = tonumber(SpeedBox.Text) or 16
+	local current = tonumber(SpeedBox.Text) or 30
 	SpeedBox.Text = tostring(math.clamp(current - 1, 1, 60))
 	Humanoid.WalkSpeed = tonumber(SpeedBox.Text)
 end)
 
+-- Carry Speed principal
 CarrySpeedBox.FocusLost:Connect(function()
 	ClampAndSet(CarrySpeedBox)
 end)
 
 CarryPlus.MouseButton1Click:Connect(function()
-	local current = tonumber(CarrySpeedBox.Text) or 16
+	local current = tonumber(CarrySpeedBox.Text) or 30
 	CarrySpeedBox.Text = tostring(math.clamp(current + 1, 1, 60))
 end)
 
 CarryMinus.MouseButton1Click:Connect(function()
-	local current = tonumber(CarrySpeedBox.Text) or 16
+	local current = tonumber(CarrySpeedBox.Text) or 30
 	CarrySpeedBox.Text = tostring(math.clamp(current - 1, 1, 60))
 end)
 
+-- Combat Speed (sub-apartado)
+CombatSpeedBox.FocusLost:Connect(function()
+	ClampAndSet(CombatSpeedBox)
+end)
+
+CombatSpeedPlus.MouseButton1Click:Connect(function()
+	local current = tonumber(CombatSpeedBox.Text) or 30
+	CombatSpeedBox.Text = tostring(math.clamp(current + 1, 1, 60))
+end)
+
+CombatSpeedMinus.MouseButton1Click:Connect(function()
+	local current = tonumber(CombatSpeedBox.Text) or 30
+	CombatSpeedBox.Text = tostring(math.clamp(current - 1, 1, 60))
+end)
+
+-- Combat Carry Speed (sub-apartado)
+CombatCarryBox.FocusLost:Connect(function()
+	ClampAndSet(CombatCarryBox)
+end)
+
+CombatCarryPlus.MouseButton1Click:Connect(function()
+	local current = tonumber(CombatCarryBox.Text) or 30
+	CombatCarryBox.Text = tostring(math.clamp(current + 1, 1, 60))
+end)
+
+CombatCarryMinus.MouseButton1Click:Connect(function()
+	local current = tonumber(CombatCarryBox.Text) or 30
+	CombatCarryBox.Text = tostring(math.clamp(current - 1, 1, 60))
+end)
+
+-- Botón CERRAR del panel
 CloseConfigBtn.MouseButton1Click:Connect(function()
 	ConfigPanel.Visible = false
 end)
 
--- El botón force.vs abre/cierra el panel (solo si NO se está arrastrando)
-ForceVsBtn.MouseButton1Click:Connect(function()
-	if not dragging then
-		ConfigPanel.Visible = not ConfigPanel.Visible
-	end
-end)
-
 -- ==========================================
---  FUNCIONALIDAD GENERAL
+--  ACCIONES DE LOS BOTONES EXTERNOS
 -- ==========================================
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-	if not gameProcessed and input.KeyCode == Enum.KeyCode.M then
-		ScreenGui.Enabled = not ScreenGui.Enabled
-		ConfigPanel.Visible = false
-	end
+-- Botón CARRY SPEED: Usa el valor del apartado "Carry Speed" principal
+CarrySpeedBtn.MouseButton1Click:Connect(function()
+	local carrySpeed = tonumber(CarrySpeedBox.Text) or 30
+	Humanoid.WalkSpeed = carrySpeed
+	CarrySpeedBtn.Text = "CARRY SPEED: ON"
+	CarrySpeedBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+	
+	task.wait(2) -- Se mantiene activo 2 segundos o hasta que se vuelva a pulsar
+	CarrySpeedBtn.Text = "CARRY SPEED"
+	CarrySpeedBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 end)
 
+-- Otros botones
 CerrarBtn.MouseButton1Click:Connect(function()
 	ScreenGui.Enabled = false
 	ConfigPanel.Visible = false
@@ -316,11 +372,6 @@ VolarBtn.MouseButton1Click:Connect(function()
 	end
 end)
 
--- Variables para los toggles (definidas arriba del uso para evitar errores)
-local saltoActivo = false
-local volando = false
-local volarLoop
-
 ResetBtn.MouseButton1Click:Connect(function()
 	if volando then
 		Humanoid.PlatformStand = false
@@ -333,4 +384,17 @@ ResetBtn.MouseButton1Click:Connect(function()
 		saltoActivo = false
 	end
 	Humanoid.Health = 0
+end)
+
+-- Variables para toggles
+local saltoActivo = false
+local volando = false
+local volarLoop
+
+-- Tecla para abrir/cerrar todo
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if not gameProcessed and input.KeyCode == Enum.KeyCode.M then
+		ScreenGui.Enabled = not ScreenGui.Enabled
+		ConfigPanel.Visible = false
+	end
 end)
