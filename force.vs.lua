@@ -7,7 +7,7 @@ ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 -- Crear el Frame principal
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 200, 0, 300)
-MainFrame.Position = UDim2.new(0.75, 0, 0.2, 0) 
+MainFrame.Position = UDim2.new(0.75, 0, 0.1, 0) -- <--- Movido más arriba (0.1 en lugar de 0.2)
 MainFrame.BackgroundTransparency = 1 
 MainFrame.Parent = ScreenGui
 
@@ -18,20 +18,18 @@ local botonesData = {
 	{"AUTO BAT", function() print("Has pulsado AUTO BAT") end},
 	{"AUTO RIGHT", function() print("Has pulsado AUTO RIGHT") end},
 	
-	-- Ejemplo de función real: Teletransportar hacia abajo
 	{"TP DOWN", function()
 		local player = game.Players.LocalPlayer
 		local char = player.Character or player.CharacterAdded:Wait()
 		local hrp = char:FindFirstChild("HumanoidRootPart")
 		if hrp then
-			hrp.CFrame = hrp.CFrame - Vector3.new(0, 10, 0) -- Baja 10 unidades
+			hrp.CFrame = hrp.CFrame - Vector3.new(0, 10, 0) 
 		end
 	end},
 	
-	-- Ejemplo de función real: Reiniciar personaje (Insta Reset)
 	{"INSTA RESET", function()
 		local player = game.Players.LocalPlayer
-		player:LoadCharacter() -- Reinicia al jugador
+		player:LoadCharacter() 
 	end},
 	
 	{"CARRY SPEED", function() print("Has pulsado CARRY SPEED") end},
@@ -40,10 +38,10 @@ local botonesData = {
 	{"BAT TP", function() print("Has pulsado BAT TP") end}
 }
 
--- Función para crear botones con su función asignada
+-- Función para crear botones (ahora más cuadrados)
 local function crearBoton(nombre, funcion, x, y)
 	local boton = Instance.new("TextButton")
-	boton.Size = UDim2.new(0, 85, 0, 35)
+	boton.Size = UDim2.new(0, 80, 0, 40) -- <--- Más cuadrado (80 de ancho, 40 de alto)
 	boton.Position = UDim2.new(0, x, 0, y)
 	boton.Text = nombre
 	boton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -52,11 +50,11 @@ local function crearBoton(nombre, funcion, x, y)
 	boton.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
 	boton.Parent = MainFrame
 	
+	-- Esquinas totalmente rectas
 	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0.1, 0)
+	corner.CornerRadius = UDim.new(0, 0) -- <--- Eliminado el redondeo para que sea cuadrado
 	corner.Parent = boton
 	
-	-- Conectar el botón a su función
 	boton.MouseButton1Click:Connect(funcion)
 	
 	return boton
@@ -64,7 +62,7 @@ end
 
 -- Posicionar los botones
 local startX, startY = 0, 0
-local gapX, gapY = 90, 40
+local gapX, gapY = 90, 45 -- <--- Más separación vertical para los botones cuadrados
 
 for i, data in ipairs(botonesData) do
 	local nombre, funcion = data[1], data[2]
