@@ -1,7 +1,6 @@
 -- ==========================================
---  SCRIPT: FORCE HUB
---  Menú completo con TP, Robo, Salto, Velocidad, Volar y Reset
---  Estilo: Botones a la derecha, cuadrados, con bordes blancos y separados
+--  SCRIPT: FORCE HUB V2
+--  Estilo: Panel superior + Botones en cuadrícula a la derecha
 -- ==========================================
 
 local Players = game:GetService("Players")
@@ -18,52 +17,84 @@ local RootPart = Character:WaitForChild("HumanoidRootPart")
 --  CREACIÓN DE LA GUI (Interfaz)
 -- ==========================================
 
--- 1. Crear la pantalla principal (Invisible, solo para agrupar los botones)
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ForceHubGui"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ==========================================
---  FUNCIÓN PARA CREAR BOTONES ESTILO "CUADRO"
+--  1. PANEL SUPERIOR "FORCE HUB"
 -- ==========================================
-local function CreateButton(name, text, yPos)
+
+-- Marco del panel (Cuadrado ancho pero pequeño, tipo banner)
+local TopPanel = Instance.new("Frame")
+TopPanel.Name = "TopPanel"
+TopPanel.Size = UDim2.new(0, 220, 0, 45) -- Ancho: 220, Alto: 45 (tipo banner)
+TopPanel.Position = UDim2.new(0.5, -110, 0, 30) -- Centrado arriba
+TopPanel.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- Casi negro
+TopPanel.BorderColor3 = Color3.fromRGB(255, 255, 255) -- Borde blanco
+TopPanel.BorderSizePixel = 2
+TopPanel.Parent = ScreenGui
+
+-- Texto del panel
+local TitleText = Instance.new("TextLabel")
+TitleText.Size = UDim2.new(1, 0, 1, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.Text = "FORCE HUB"
+TitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleText.Font = Enum.Font.GothamBold
+TitleText.TextSize = 18
+TitleText.Parent = TopPanel
+
+-- ==========================================
+--  2. CREACIÓN DE BOTONES EN CUADRÍCULA
+-- ==========================================
+
+-- Función para crear botones cuadrados y alinearlos
+local function CreateButton(name, text, col, row)
 	local button = Instance.new("TextButton")
 	button.Name = name
 	
-	-- Tamaño cuadrado (Ancho y Alto iguales)
-	button.Size = UDim2.new(0, 80, 0, 80) 
+	-- Tamaño del botón (Ancho y Alto iguales)
+	button.Size = UDim2.new(0, 85, 0, 70) 
 	
-	-- Posición: En el lado derecho (1 = 100% de la pantalla), con un margen de -110 para que no se pegue al borde
-	button.Position = UDim2.new(1, -110, 0, yPos)
+	-- Posición en el lado derecho
+	-- Columna 0 (izquierda) y Columna 1 (derecha)
+	-- Fila 0, 1, 2, 3...
+	local xOffset = (col == 0) and -200 or -105
+	local yOffset = 90 + (row * 80) -- Espacio de 10px entre filas (70 alto + 10 espacio)
 	
-	-- Fondo del botón (Negro/Gris oscuro)
-	button.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	button.Position = UDim2.new(1, xOffset, 0, yOffset)
 	
-	-- Borde blanco
+	-- Estilo: Fondo oscuro, borde blanco
+	button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 	button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-	button.BorderSizePixel = 2 -- Grosor del borde
+	button.BorderSizePixel = 2 
 	
-	-- Texto del botón
+	-- Texto
 	button.TextColor3 = Color3.fromRGB(255, 255, 255)
 	button.Font = Enum.Font.GothamBold
-	button.TextSize = 12
+	button.TextSize = 11
 	button.Text = text
-	button.TextWrapped = true -- Para que el texto no se salga del cuadrado
+	button.TextWrapped = true
 	button.AutoButtonColor = true
 	
 	button.Parent = ScreenGui
 	return button
 end
 
--- Crear botones (Aumenté la separación a 100 para que tengan espacio entre ellos)
-local RoboBtn = CreateButton("RoboBtn", "ROBO", 100)
-local TPBtn = CreateButton("TPBtn", "TP DOWN", 200)
-local SaltoBtn = CreateButton("SaltoBtn", "SALTO", 300)
-local VelocidadBtn = CreateButton("VelocidadBtn", "VELOCIDAD", 400)
-local VolarBtn = CreateButton("VolarBtn", "VOLAR", 500)
-local ResetBtn = CreateButton("ResetBtn", "RESET", 600)
-local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 700)
+-- CREAR BOTONES (Columnas 0 y 1, Filas 0 a 3)
+-- Columna Izquierda (0)
+local RoboBtn = CreateButton("RoboBtn", "ROBO", 0, 0)
+local SaltoBtn = CreateButton("SaltoBtn", "SALTO", 0, 1)
+local VelocidadBtn = CreateButton("VelocidadBtn", "VELOCIDAD", 0, 2)
+local ResetBtn = CreateButton("ResetBtn", "RESET", 0, 3)
+
+-- Columna Derecha (1)
+local TPBtn = CreateButton("TPBtn", "TP DOWN", 1, 0)
+local VolarBtn = CreateButton("VolarBtn", "VOLAR", 1, 1)
+local InstaBtn = CreateButton("InstaBtn", "INSTA\nRESET", 1, 2) -- Ejemplo extra
+local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 1, 3)
 
 -- ==========================================
 --  FUNCIONALIDAD DE LA GUI (Abrir/Cerrar)
@@ -72,7 +103,6 @@ local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 700)
 -- Abrir/Cerrar con la tecla "M"
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if not gameProcessed and input.KeyCode == Enum.KeyCode.M then
-		-- Como los botones están sueltos, los ocultamos todos juntos usando el ScreenGui
 		ScreenGui.Enabled = not ScreenGui.Enabled
 	end
 end)
@@ -99,11 +129,11 @@ SaltoBtn.MouseButton1Click:Connect(function()
 		Humanoid.JumpPower = 250
 		Humanoid.UseJumpPower = true
 		SaltoBtn.Text = "SALTO: ON"
-		SaltoBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0) -- Verde
+		SaltoBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
 	else
 		Humanoid.JumpPower = 50
 		SaltoBtn.Text = "SALTO"
-		SaltoBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Gris oscuro
+		SaltoBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 	end
 end)
 
@@ -114,11 +144,11 @@ VelocidadBtn.MouseButton1Click:Connect(function()
 	if velocidadActiva then
 		Humanoid.WalkSpeed = 100
 		VelocidadBtn.Text = "VELOCIDAD: ON"
-		VelocidadBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0) -- Verde
+		VelocidadBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
 	else
 		Humanoid.WalkSpeed = 16
 		VelocidadBtn.Text = "VELOCIDAD"
-		VelocidadBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Gris oscuro
+		VelocidadBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 	end
 end)
 
@@ -132,20 +162,18 @@ VolarBtn.MouseButton1Click:Connect(function()
 		VolarBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
 		Humanoid.PlatformStand = true
 		
-		-- Loop para mantener el vuelo mientras mueves la cámara
 		volarLoop = game:GetService("RunService").RenderStepped:Connect(function()
 			if volando then
 				local camera = workspace.CurrentCamera
 				local moveDir = camera.CFrame.LookVector * (UserInputService:IsKeyDown(Enum.KeyCode.W) and 1 or 0)
 				local upDown = UserInputService:IsKeyDown(Enum.KeyCode.Space) and 1 or 0
-				
 				RootPart.Velocity = Vector3.new(moveDir.X * 100, upDown * 100, moveDir.Z * 100)
 			end
 		end)
 		
 	else
 		VolarBtn.Text = "VOLAR"
-		VolarBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		VolarBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 		Humanoid.PlatformStand = false
 		RootPart.Velocity = Vector3.new(0, 0, 0)
 		if volarLoop then volarLoop:Disconnect() end
@@ -154,7 +182,6 @@ end)
 
 -- Botón Reset (Reiniciar personaje)
 ResetBtn.MouseButton1Click:Connect(function()
-	-- Apagamos las funciones por si acaso
 	if volando then
 		Humanoid.PlatformStand = false
 		RootPart.Velocity = Vector3.new(0, 0, 0)
@@ -169,8 +196,11 @@ ResetBtn.MouseButton1Click:Connect(function()
 		Humanoid.JumpPower = 50
 		saltoActivo = false
 	end
+	Humanoid.Health = 0
+end)
 
-	-- Forzamos el reinicio del personaje
+-- Botón Insta Reset (Reset instantáneo sin esperar)
+InstaBtn.MouseButton1Click:Connect(function()
 	Humanoid.Health = 0
 end)
 
