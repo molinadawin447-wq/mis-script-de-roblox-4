@@ -1,136 +1,78 @@
--- Script Local - Fenix Hub
+-- Crear el ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "PanelAdmin"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local player = game.Players.LocalPlayer
-local mouse = player:GetMouse()
-local guiService = game:GetService("GuiService")
+-- Crear el Frame principal
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 200, 0, 300)
+MainFrame.Position = UDim2.new(0.75, 0, 0.2, 0) 
+MainFrame.BackgroundTransparency = 1 
+MainFrame.Parent = ScreenGui
 
--- Crear la interfaz principal
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "FenixHubGUI"
-screenGui.Parent = player.PlayerGui
-
--- Frame principal
-local mainFrame = Instance.new("Frame")
-mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0, 350, 0, 500)
-mainFrame.Position = UDim2.new(0.5, -175, 0.5, -250)
-mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-mainFrame.BackgroundTransparency = 0.15
-mainFrame.BorderSizePixel = 2
-mainFrame.BorderColor3 = Color3.fromRGB(0, 170, 255)
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
-
--- Título
-local title = Instance.new("TextLabel")
-title.Name = "Title"
-title.Size = UDim2.new(1, 0, 0, 35)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-title.BackgroundTransparency = 0.3
-title.Text = "FENIX HUB"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.TextSize = 20
-title.Font = Enum.Font.GothamBold
-title.Parent = mainFrame
-
--- Contenedor para los botones (Scrollable)
-local buttonContainer = Instance.new("ScrollingFrame")
-buttonContainer.Name = "ButtonContainer"
-buttonContainer.Size = UDim2.new(1, -10, 1, -45)
-buttonContainer.Position = UDim2.new(0, 5, 0, 40)
-buttonContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
-buttonContainer.BackgroundTransparency = 0.5
-buttonContainer.BorderSizePixel = 0
-buttonContainer.Parent = mainFrame
-
-local gridLayout = Instance.new("UIGridLayout")
-gridLayout.CellSize = UDim2.new(0, 100, 0, 35)
-gridLayout.CellPadding = UDim2.new(0, 5, 0, 5)
-gridLayout.StartCorner = Enum.StartCorner.TopLeft
-gridLayout.Parent = buttonContainer
-
--- Lista de nombres de botones
-local buttonNames = {
-    "THROBBERBROAD", "LEAGUE-CENTER", "DESBLOQUEAR", "DROP", "AUTO", "BRAINROT",
-    "LEFT", "STEAL", "MAIN", "AUTO", "AUTO", "ROBO AUTOMATICO",
-    "BAT", "RIGHT", "STEAL", "VISUALS", "MOTION", "STEAL BAR SIZE",
-    "300", "DOWN", "TP", "CARRY", "SPEED", "KEYS",
-    "SALTO INFINITO", "LAGGER", "INSTA", "SETTINGS", "MODE", "RESET",
-    "MIRROR TP DOWN", "LAGGER", "BAT", "AUTO IZQUIERDA", "CARRY", "TP",
-    "DERECHA AUTOMATICA", "AUTO TP DOWN"
+-- Lista de nombres y funciones
+local botonesData = {
+	{"DROP BRAINROT", function() print("Has pulsado DROP BRAINROT") end},
+	{"AUTO LEFT", function() print("Has pulsado AUTO LEFT") end},
+	{"AUTO BAT", function() print("Has pulsado AUTO BAT") end},
+	{"AUTO RIGHT", function() print("Has pulsado AUTO RIGHT") end},
+	
+	-- Ejemplo de función real: Teletransportar hacia abajo
+	{"TP DOWN", function()
+		local player = game.Players.LocalPlayer
+		local char = player.Character or player.CharacterAdded:Wait()
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			hrp.CFrame = hrp.CFrame - Vector3.new(0, 10, 0) -- Baja 10 unidades
+		end
+	end},
+	
+	-- Ejemplo de función real: Reiniciar personaje (Insta Reset)
+	{"INSTA RESET", function()
+		local player = game.Players.LocalPlayer
+		player:LoadCharacter() -- Reinicia al jugador
+	end},
+	
+	{"CARRY SPEED", function() print("Has pulsado CARRY SPEED") end},
+	{"LAGGER MODE", function() print("Has pulsado LAGGER MODE") end},
+	{"LAGGER CARRY", function() print("Has pulsado LAGGER CARRY") end},
+	{"BAT TP", function() print("Has pulsado BAT TP") end}
 }
 
--- Función para crear botones
-local function createButton(name)
-    local button = Instance.new("TextButton")
-    button.Name = name
-    button.Size = UDim2.new(0, 100, 0, 35)
-    button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    button.BorderSizePixel = 1
-    button.BorderColor3 = Color3.fromRGB(0, 170, 255)
-    button.Text = name
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.TextSize = 12
-    button.Font = Enum.Font.GothamBold
-    button.Parent = buttonContainer
-    
-    -- Efecto hover
-    button.MouseEnter:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(60, 60, 90)
-    end)
-    button.MouseLeave:Connect(function()
-        button.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
-    end)
-    
-    -- Función al hacer clic
-    button.MouseButton1Click:Connect(function()
-        print("Botón presionado: " .. name)
-        -- Aquí puedes agregar la funcionalidad para cada botón
-        if name == "SALTO INFINITO" then
-            -- Ejemplo: Activar salto infinito
-            print("Activando salto infinito")
-        elseif name == "RESET" then
-            -- Ejemplo: Resetear algo
-            print("Reseteando...")
-        elseif name == "SETTINGS" then
-            print("Abriendo configuración")
-        end
-    end)
+-- Función para crear botones con su función asignada
+local function crearBoton(nombre, funcion, x, y)
+	local boton = Instance.new("TextButton")
+	boton.Size = UDim2.new(0, 85, 0, 35)
+	boton.Position = UDim2.new(0, x, 0, y)
+	boton.Text = nombre
+	boton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	boton.Font = Enum.Font.GothamBold
+	boton.TextSize = 12
+	boton.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
+	boton.Parent = MainFrame
+	
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0.1, 0)
+	corner.Parent = boton
+	
+	-- Conectar el botón a su función
+	boton.MouseButton1Click:Connect(funcion)
+	
+	return boton
 end
 
--- Crear todos los botones
-for _, name in ipairs(buttonNames) do
-    createButton(name)
+-- Posicionar los botones
+local startX, startY = 0, 0
+local gapX, gapY = 90, 40
+
+for i, data in ipairs(botonesData) do
+	local nombre, funcion = data[1], data[2]
+	local columna = (i - 1) % 2
+	local fila = math.floor((i - 1) / 2)
+	
+	local x = startX + (columna * gapX)
+	local y = startY + (fila * gapY)
+	
+	crearBoton(nombre, funcion, x, y)
 end
-
--- Botón de cerrar (esquina superior derecha)
-local closeButton = Instance.new("TextButton")
-closeButton.Name = "CloseButton"
-closeButton.Size = UDim2.new(0, 25, 0, 25)
-closeButton.Position = UDim2.new(1, -30, 0, 5)
-closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-closeButton.Text = "X"
-closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeButton.TextSize = 16
-closeButton.Font = Enum.Font.GothamBold
-closeButton.Parent = mainFrame
-
-closeButton.MouseButton1Click:Connect(function()
-    screenGui:Destroy()
-end)
-
--- Tecla para abrir/cerrar (por ejemplo, F5)
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.KeyCode == Enum.KeyCode.F5 then
-        if screenGui.Parent then
-            screenGui:Destroy()
-        else
-            screenGui.Parent = player.PlayerGui
-        end
-    end
-end)
-
-print("Fenix Hub cargado correctamente")
