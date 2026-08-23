@@ -7,7 +7,7 @@ ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 -- Crear el Frame principal
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 200, 0, 300)
-MainFrame.Position = UDim2.new(0.75, 0, 0.01, 0) -- <--- Subido al 1% de la pantalla
+MainFrame.Position = UDim2.new(0.75, 0, 0.01, 0) -- Posición arriba a la derecha
 MainFrame.BackgroundTransparency = 1 
 MainFrame.Parent = ScreenGui
 
@@ -27,9 +27,12 @@ local botonesData = {
 		end
 	end},
 	
+	-- AQUÍ ESTÁ LA FUNCIÓN DE REINICIAR PERSONAJE
 	{"INSTA RESET", function()
 		local player = game.Players.LocalPlayer
-		player:LoadCharacter() 
+		-- Pequeña espera para evitar errores de servidor
+		task.wait(0.1)
+		player:LoadCharacter() -- Esto reinicia al jugador
 	end},
 	
 	{"CARRY SPEED", function() print("Has pulsado CARRY SPEED") end},
@@ -41,7 +44,7 @@ local botonesData = {
 -- Función para crear botones redondos
 local function crearBoton(nombre, funcion, x, y)
 	local boton = Instance.new("TextButton")
-	boton.Size = UDim2.new(0, 85, 0, 35) -- Un poco más ancho para el estilo redondeado
+	boton.Size = UDim2.new(0, 85, 0, 35)
 	boton.Position = UDim2.new(0, x, 0, y)
 	boton.Text = nombre
 	boton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -50,9 +53,8 @@ local function crearBoton(nombre, funcion, x, y)
 	boton.BackgroundColor3 = Color3.fromRGB(15, 15, 30)
 	boton.Parent = MainFrame
 	
-	-- Esquinas redondeadas (radio máximo)
 	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(1, 0) -- <--- Botones redondos
+	corner.CornerRadius = UDim.new(1, 0) -- Botones redondos
 	corner.Parent = boton
 	
 	boton.MouseButton1Click:Connect(funcion)
@@ -62,7 +64,7 @@ end
 
 -- Posicionar los botones
 local startX, startY = 0, 0
-local gapX, gapY = 90, 45 -- Separación entre botones
+local gapX, gapY = 90, 45
 
 for i, data in ipairs(botonesData) do
 	local nombre, funcion = data[1], data[2]
