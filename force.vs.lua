@@ -1,6 +1,6 @@
 -- ==========================================
---  SCRIPT: FORCE HUB V7
---  force.vs arrastrable + Configuración Speed/Combat + Botón Carry Speed
+--  SCRIPT: FORCE HUB ESTILO FENIX (V8)
+--  Panel grande estilo imagen + force.vs arrastrable
 -- ==========================================
 
 local Players = game:GetService("Players")
@@ -14,53 +14,16 @@ local Humanoid = Character:WaitForChild("Humanoid")
 local RootPart = Character:WaitForChild("HumanoidRootPart")
 
 -- ==========================================
---  CREACIÓN DE LA GUI
+--  GUI PRINCIPAL
 -- ==========================================
-
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ForceHubGui"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
 -- ==========================================
---  BOTONES EN COLUMNA DERECHA
+--  1. BOTÓN "FORCE.VS" (ARRANQUE Y ARRASTRABLE)
 -- ==========================================
-
-local function CreateButton(name, text, row)
-	local button = Instance.new("TextButton")
-	button.Name = name
-	button.Size = UDim2.new(0, 100, 0, 70)
-	
-	local xOffset = -120
-	local yOffset = 10 + (row * 80)
-	
-	button.Position = UDim2.new(1, xOffset, 0, yOffset)
-	button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-	button.BorderSizePixel = 2
-	button.TextColor3 = Color3.fromRGB(255, 255, 255)
-	button.Font = Enum.Font.GothamBold
-	button.TextSize = 13
-	button.Text = text
-	button.TextWrapped = true
-	button.AutoButtonColor = true
-	button.Parent = ScreenGui
-	return button
-end
-
--- Columna derecha
-local DropBtn = CreateButton("DropBtn", "DROP", 0)
-local SaltoBtn = CreateButton("SaltoBtn", "SALTO", 1)
-local TPBtn = CreateButton("TPBtn", "TP DOWN", 2)
-local VolarBtn = CreateButton("VolarBtn", "VOLAR", 3)
-local CarrySpeedBtn = CreateButton("CarrySpeedBtn", "CARRY SPEED", 4) -- Nuevo botón exterior
-local ResetBtn = CreateButton("ResetBtn", "RESET", 5)
-local CerrarBtn = CreateButton("CerrarBtn", "CERRAR", 6)
-
--- ==========================================
---  BOTÓN "FORCE.VS" (ARRASTRABLE)
--- ==========================================
-
 local ForceVsBtn = Instance.new("TextButton")
 ForceVsBtn.Name = "ForceVsBtn"
 ForceVsBtn.Size = UDim2.new(0, 110, 0, 45)
@@ -74,7 +37,7 @@ ForceVsBtn.TextSize = 16
 ForceVsBtn.Text = "force.vs"
 ForceVsBtn.Parent = ScreenGui
 
--- Función para arrastrar
+-- Función para arrastrar force.vs
 local dragging, dragInput, startPos, startPos2
 ForceVsBtn.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -106,38 +69,152 @@ UserInputService.InputEnded:Connect(function(input)
 	end
 end)
 
--- Al hacer clic (si no está arrastrando) abre el panel
-ForceVsBtn.MouseButton1Click:Connect(function()
-	if not dragging then
-		ConfigPanel.Visible = not ConfigPanel.Visible
-	end
-end)
-
 -- ==========================================
---  PANEL DE CONFIGURACIÓN (SPEED Y COMBAT)
+--  2. PANEL PRINCIPAL ESTILO "FENIX HUB"
 -- ==========================================
 
--- Panel principal
+local MainPanel = Instance.new("Frame")
+MainPanel.Name = "MainPanel"
+MainPanel.Size = UDim2.new(0, 350, 0, 450)
+MainPanel.Position = UDim2.new(0.5, -175, 0.5, -225)
+MainPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainPanel.BorderColor3 = Color3.fromRGB(255, 255, 255)
+MainPanel.BorderSizePixel = 3
+MainPanel.Visible = false -- Aparece al tocar force.vs
+MainPanel.Parent = ScreenGui
+
+-- Botón de cerrar (X) en la esquina superior derecha del panel grande
+local CloseMainX = Instance.new("TextButton")
+CloseMainX.Size = UDim2.new(0, 30, 0, 30)
+CloseMainX.Position = UDim2.new(1, -35, 0, 5)
+CloseMainX.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+CloseMainX.Text = "X"
+CloseMainX.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseMainX.Font = Enum.Font.GothamBold
+CloseMainX.TextSize = 15
+CloseMainX.Parent = MainPanel
+
+-- Texto Grande "FORCE HUB" 
+local BigTitle = Instance.new("TextLabel")
+BigTitle.Size = UDim2.new(0, 200, 0, 50)
+BigTitle.Position = UDim2.new(0, 15, 0, 15)
+BigTitle.BackgroundTransparency = 1
+BigTitle.Text = "FORCE HUB"
+BigTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+BigTitle.Font = Enum.Font.GothamBlack
+BigTitle.TextSize = 25
+BigTitle.TextXAlignment = Enum.TextXAlignment.Left
+BigTitle.Parent = MainPanel
+
+-- Texto pequeño "FORCE HUB" debajo del grande
+local SmallTitle = Instance.new("TextLabel")
+SmallTitle.Size = UDim2.new(0, 200, 0, 20)
+SmallTitle.Position = UDim2.new(0, 15, 0, 60)
+SmallTitle.BackgroundTransparency = 1
+SmallTitle.Text = "FORCE HUB"
+SmallTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
+SmallTitle.Font = Enum.Font.Gotham
+SmallTitle.TextSize = 12
+SmallTitle.TextXAlignment = Enum.TextXAlignment.Left
+SmallTitle.Parent = MainPanel
+
+-- ==========================================
+--  3. MENÚ LATERAL (PESTAÑAS)
+-- ==========================================
+
+local function CreateTab(name, yPos)
+	local tab = Instance.new("TextButton")
+	tab.Size = UDim2.new(0, 90, 0, 45)
+	tab.Position = UDim2.new(0, 10, 0, yPos)
+	tab.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	tab.Text = name
+	tab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	tab.Font = Enum.Font.GothamBold
+	tab.TextSize = 12
+	tab.Parent = MainPanel
+	return tab
+end
+
+local MainTab = CreateTab("MAIN", 90)
+local StealTab = CreateTab("STEAL", 145)
+local VisualsTab = CreateTab("VISUALS", 200)
+local KeysTab = CreateTab("KEYS", 255)
+local SettingsTab = CreateTab("SETTINGS", 310)
+
+-- ==========================================
+--  4. CONTENEDOR DE BOTONES (LADO DERECHO)
+-- ==========================================
+
+local function CreateToggleRow(name, yPos)
+	local row = Instance.new("Frame")
+	row.Size = UDim2.new(0, 220, 0, 45)
+	row.Position = UDim2.new(0, 110, 0, yPos)
+	row.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	row.BorderSizePixel = 0
+	row.Parent = MainPanel
+
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.new(1, -60, 1, 0)
+	label.BackgroundTransparency = 1
+	label.Text = name
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.Font = Enum.Font.GothamBold
+	label.TextSize = 12
+	label.TextXAlignment = Enum.TextXAlignment.Left
+	label.Parent = row
+
+	local toggle = Instance.new("TextButton")
+	toggle.Size = UDim2.new(0, 45, 0, 25)
+	toggle.Position = UDim2.new(1, -50, 0.5, -12.5)
+	toggle.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- Gris oscuro (apagado)
+	toggle.Text = ""
+	toggle.Parent = row
+
+	return row, label, toggle
+end
+
+-- Crear filas de ejemplo (estilo imagen)
+local _, DropLabel, DropToggle = CreateToggleRow("DROP", 90)
+local _, SaltoLabel, SaltoToggle = CreateToggleRow("SALTO INFINITO", 145)
+local _, TPLabel, TPToggle = CreateToggleRow("TP DOWN", 200)
+local _, CarryLabel, CarryToggle = CreateToggleRow("CARRY SPEED", 255)
+local _, VolarLabel, VolarToggle = CreateToggleRow("VOLAR", 310)
+
+-- ==========================================
+--  5. PANEL DE CONFIGURACIÓN PEQUEÑO
+-- ==========================================
+
 local ConfigPanel = Instance.new("Frame")
 ConfigPanel.Name = "ConfigPanel"
-ConfigPanel.Size = UDim2.new(0, 220, 0, 230)
-ConfigPanel.Position = UDim2.new(0, 160, 0, 100)
+ConfigPanel.Size = UDim2.new(0, 200, 0, 230)
+ConfigPanel.Position = UDim2.new(0.5, 100, 0, -50) -- Aparece al lado del panel grande
 ConfigPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 ConfigPanel.BorderColor3 = Color3.fromRGB(255, 255, 255)
 ConfigPanel.BorderSizePixel = 2
 ConfigPanel.Visible = false
-ConfigPanel.Parent = ScreenGui
+ConfigPanel.Parent = MainPanel -- Se mueve junto al panel grande
+
+-- Botón de cerrar (X) del panel de configuración
+local CloseConfigX = Instance.new("TextButton")
+CloseConfigX.Size = UDim2.new(0, 25, 0, 25)
+CloseConfigX.Position = UDim2.new(1, -30, 0, 5)
+CloseConfigX.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+CloseConfigX.Text = "X"
+CloseConfigX.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseConfigX.Font = Enum.Font.GothamBold
+CloseConfigX.TextSize = 12
+CloseConfigX.Parent = ConfigPanel
 
 local ConfigTitle = Instance.new("TextLabel")
 ConfigTitle.Size = UDim2.new(1, 0, 0, 30)
+ConfigTitle.Position = UDim2.new(0, 0, 0, 5)
 ConfigTitle.BackgroundTransparency = 1
 ConfigTitle.Text = "CONFIGURACIÓN"
 ConfigTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 ConfigTitle.Font = Enum.Font.GothamBold
-ConfigTitle.TextSize = 14
+ConfigTitle.TextSize = 12
 ConfigTitle.Parent = ConfigPanel
 
--- Función genérica para crear apartados con cajas y botones +/-
 local function CreateConfigRow(yPos, labelText)
 	local Label = Instance.new("TextLabel")
 	Label.Size = UDim2.new(0, 80, 0, 25)
@@ -146,7 +223,7 @@ local function CreateConfigRow(yPos, labelText)
 	Label.Text = labelText
 	Label.TextColor3 = Color3.fromRGB(255, 255, 255)
 	Label.Font = Enum.Font.Gotham
-	Label.TextSize = 13
+	Label.TextSize = 12
 	Label.Parent = ConfigPanel
 
 	local TextBox = Instance.new("TextBox")
@@ -180,42 +257,118 @@ local function CreateConfigRow(yPos, labelText)
 	return Label, TextBox, PlusBtn, MinusBtn
 end
 
--- Apartado SPEED (Y = 40) y CARRY SPEED (Y = 75)
+-- Crear filas de configuración
 local _, SpeedBox, SpeedPlus, SpeedMinus = CreateConfigRow(40, "Speed")
-local _, CarrySpeedBox, CarryPlus, CarryMinus = CreateConfigRow(75, "Carry Speed")
+local _, CarrySpeedBox, CarryPlus, CarryMinus = CreateConfigRow(80, "Carry Speed")
 
 -- ==========================================
---  APARTADO "COMBAT" Y SUB-APARTADOS
+--  6. FUNCIONALIDAD DE APERTURA Y CIERRE
 -- ==========================================
 
--- Título del apartado Combat
-local CombatLabel = Instance.new("TextLabel")
-CombatLabel.Size = UDim2.new(1, 0, 0, 20)
-CombatLabel.Position = UDim2.new(0, 0, 0, 110)
-CombatLabel.BackgroundTransparency = 1
-CombatLabel.Text = "COMBAT"
-CombatLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-CombatLabel.Font = Enum.Font.GothamBold
-CombatLabel.TextSize = 14
-CombatLabel.Parent = ConfigPanel
+-- Al tocar force.vs (si no está arrastrando), abre/cierra el panel grande
+ForceVsBtn.MouseButton1Click:Connect(function()
+	if not dragging then
+		MainPanel.Visible = not MainPanel.Visible
+		if not MainPanel.Visible then ConfigPanel.Visible = false end
+	end
+end)
 
--- Sub-apartados dentro de Combat
-local _, CombatSpeedBox, CombatSpeedPlus, CombatSpeedMinus = CreateConfigRow(135, "Speed")
-local _, CombatCarryBox, CombatCarryPlus, CombatCarryMinus = CreateConfigRow(170, "Carry Speed")
+-- Cerrar panel grande con la X
+CloseMainX.MouseButton1Click:Connect(function()
+	MainPanel.Visible = false
+	ConfigPanel.Visible = false
+end)
 
--- Botón para cerrar el panel
-local CloseConfigBtn = Instance.new("TextButton")
-CloseConfigBtn.Size = UDim2.new(0, 80, 0, 20)
-CloseConfigBtn.Position = UDim2.new(0.5, -40, 0, 205)
-CloseConfigBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-CloseConfigBtn.Text = "CERRAR"
-CloseConfigBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseConfigBtn.Font = Enum.Font.GothamBold
-CloseConfigBtn.TextSize = 10
-CloseConfigBtn.Parent = ConfigPanel
+-- Cerrar panel de configuración con su X
+CloseConfigX.MouseButton1Click:Connect(function()
+	ConfigPanel.Visible = false
+end)
+
+-- Abrir/cerrar panel de configuración (con la pestaña SETTINGS o cualquier botón que quieras)
+SettingsTab.MouseButton1Click:Connect(function()
+	ConfigPanel.Visible = not ConfigPanel.Visible
+end)
 
 -- ==========================================
---  FUNCIONALIDAD DE CONFIGURACIÓN
+--  7. FUNCIONALIDAD DE LOS TOGGLES Y BOTONES
+-- ==========================================
+
+-- Funciones de Toggle (Encender/Apagar los botones del panel estilo imagen)
+local function ToggleSwitch(toggle, callback)
+	toggle.MouseButton1Click:Connect(function()
+		if toggle.BackgroundColor3 == Color3.fromRGB(80, 80, 80) then
+			toggle.BackgroundColor3 = Color3.fromRGB(0, 170, 0) -- Verde (encendido)
+			callback(true)
+		else
+			toggle.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- Gris (apagado)
+			callback(false)
+		end
+	end)
+end
+
+-- Drop
+ToggleSwitch(DropToggle, function(state)
+	if state then
+		Humanoid.Jump = true
+		for _, tool in pairs(Character:GetChildren()) do
+			if tool:IsA("Tool") then tool.Parent = workspace end
+		end
+		RootPart.AssemblyLinearVelocity = Vector3.new(RootPart.AssemblyLinearVelocity.X, 50, RootPart.AssemblyLinearVelocity.Z)
+	end
+end)
+
+-- Salto infinito
+local saltoActivo = false
+ToggleSwitch(SaltoToggle, function(state)
+	saltoActivo = state
+	if state then
+		Humanoid.JumpPower = 250
+		Humanoid.UseJumpPower = true
+	else
+		Humanoid.JumpPower = 50
+	end
+end)
+
+-- TP Down
+ToggleSwitch(TPToggle, function(state)
+	if state then
+		RootPart.CFrame = RootPart.CFrame + Vector3.new(0, -15, 0)
+	end
+end)
+
+-- Carry Speed (Usa el valor de la caja)
+ToggleSwitch(CarryToggle, function(state)
+	if state then
+		Humanoid.WalkSpeed = tonumber(CarrySpeedBox.Text) or 30
+	else
+		Humanoid.WalkSpeed = 16
+	end
+end)
+
+-- Volar
+local volando = false
+local volarLoop
+ToggleSwitch(VolarToggle, function(state)
+	volando = state
+	if state then
+		Humanoid.PlatformStand = true
+		volarLoop = game:GetService("RunService").RenderStepped:Connect(function()
+			if volando then
+				local camera = workspace.CurrentCamera
+				local moveDir = camera.CFrame.LookVector * (UserInputService:IsKeyDown(Enum.KeyCode.W) and 1 or 0)
+				local upDown = UserInputService:IsKeyDown(Enum.KeyCode.Space) and 1 or 0
+				RootPart.Velocity = Vector3.new(moveDir.X * 100, upDown * 100, moveDir.Z * 100)
+			end
+		end)
+	else
+		Humanoid.PlatformStand = false
+		RootPart.Velocity = Vector3.new(0, 0, 0)
+		if volarLoop then volarLoop:Disconnect() end
+	end
+end)
+
+-- ==========================================
+--  CONFIGURACIÓN DE VELOCIDAD (Cajas de texto)
 -- ==========================================
 
 local function ClampAndSet(textBox)
@@ -228,11 +381,8 @@ local function ClampAndSet(textBox)
 	return 30
 end
 
--- Speed principal (30 = normal)
 SpeedBox.FocusLost:Connect(function()
-	local val = ClampAndSet(SpeedBox)
-	-- Ajusta la velocidad directamente
-	Humanoid.WalkSpeed = val
+	Humanoid.WalkSpeed = ClampAndSet(SpeedBox)
 end)
 
 SpeedPlus.MouseButton1Click:Connect(function()
@@ -247,7 +397,6 @@ SpeedMinus.MouseButton1Click:Connect(function()
 	Humanoid.WalkSpeed = tonumber(SpeedBox.Text)
 end)
 
--- Carry Speed principal
 CarrySpeedBox.FocusLost:Connect(function()
 	ClampAndSet(CarrySpeedBox)
 end)
@@ -262,139 +411,10 @@ CarryMinus.MouseButton1Click:Connect(function()
 	CarrySpeedBox.Text = tostring(math.clamp(current - 1, 1, 60))
 end)
 
--- Combat Speed (sub-apartado)
-CombatSpeedBox.FocusLost:Connect(function()
-	ClampAndSet(CombatSpeedBox)
-end)
-
-CombatSpeedPlus.MouseButton1Click:Connect(function()
-	local current = tonumber(CombatSpeedBox.Text) or 30
-	CombatSpeedBox.Text = tostring(math.clamp(current + 1, 1, 60))
-end)
-
-CombatSpeedMinus.MouseButton1Click:Connect(function()
-	local current = tonumber(CombatSpeedBox.Text) or 30
-	CombatSpeedBox.Text = tostring(math.clamp(current - 1, 1, 60))
-end)
-
--- Combat Carry Speed (sub-apartado)
-CombatCarryBox.FocusLost:Connect(function()
-	ClampAndSet(CombatCarryBox)
-end)
-
-CombatCarryPlus.MouseButton1Click:Connect(function()
-	local current = tonumber(CombatCarryBox.Text) or 30
-	CombatCarryBox.Text = tostring(math.clamp(current + 1, 1, 60))
-end)
-
-CombatCarryMinus.MouseButton1Click:Connect(function()
-	local current = tonumber(CombatCarryBox.Text) or 30
-	CombatCarryBox.Text = tostring(math.clamp(current - 1, 1, 60))
-end)
-
--- Botón CERRAR del panel
-CloseConfigBtn.MouseButton1Click:Connect(function()
-	ConfigPanel.Visible = false
-end)
-
--- ==========================================
---  ACCIONES DE LOS BOTONES EXTERNOS
--- ==========================================
-
--- Botón CARRY SPEED: Usa el valor del apartado "Carry Speed" principal
-CarrySpeedBtn.MouseButton1Click:Connect(function()
-	local carrySpeed = tonumber(CarrySpeedBox.Text) or 30
-	Humanoid.WalkSpeed = carrySpeed
-	CarrySpeedBtn.Text = "CARRY SPEED: ON"
-	CarrySpeedBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-	
-	task.wait(2) -- Se mantiene activo 2 segundos o hasta que se vuelva a pulsar
-	CarrySpeedBtn.Text = "CARRY SPEED"
-	CarrySpeedBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-end)
-
--- Otros botones
-CerrarBtn.MouseButton1Click:Connect(function()
-	ScreenGui.Enabled = false
-	ConfigPanel.Visible = false
-end)
-
-TPBtn.MouseButton1Click:Connect(function()
-	RootPart.CFrame = RootPart.CFrame + Vector3.new(0, -15, 0)
-end)
-
-DropBtn.MouseButton1Click:Connect(function()
-	Humanoid.Jump = true
-	for _, tool in pairs(Character:GetChildren()) do
-		if tool:IsA("Tool") then
-			tool.Parent = workspace
-		end
-	end
-	RootPart.AssemblyLinearVelocity = Vector3.new(RootPart.AssemblyLinearVelocity.X, 50, RootPart.AssemblyLinearVelocity.Z)
-end)
-
-SaltoBtn.MouseButton1Click:Connect(function()
-	saltoActivo = not saltoActivo
-	if saltoActivo then
-		Humanoid.JumpPower = 250
-		Humanoid.UseJumpPower = true
-		SaltoBtn.Text = "SALTO: ON"
-		SaltoBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-	else
-		Humanoid.JumpPower = 50
-		SaltoBtn.Text = "SALTO"
-		SaltoBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	end
-end)
-
-VolarBtn.MouseButton1Click:Connect(function()
-	volando = not volando
-	if volando then
-		VolarBtn.Text = "VOLAR: ON"
-		VolarBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-		Humanoid.PlatformStand = true
-		
-		volarLoop = game:GetService("RunService").RenderStepped:Connect(function()
-			if volando then
-				local camera = workspace.CurrentCamera
-				local moveDir = camera.CFrame.LookVector * (UserInputService:IsKeyDown(Enum.KeyCode.W) and 1 or 0)
-				local upDown = UserInputService:IsKeyDown(Enum.KeyCode.Space) and 1 or 0
-				RootPart.Velocity = Vector3.new(moveDir.X * 100, upDown * 100, moveDir.Z * 100)
-			end
-		end)
-		
-	else
-		VolarBtn.Text = "VOLAR"
-		VolarBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-		Humanoid.PlatformStand = false
-		RootPart.Velocity = Vector3.new(0, 0, 0)
-		if volarLoop then volarLoop:Disconnect() end
-	end
-end)
-
-ResetBtn.MouseButton1Click:Connect(function()
-	if volando then
-		Humanoid.PlatformStand = false
-		RootPart.Velocity = Vector3.new(0, 0, 0)
-		if volarLoop then volarLoop:Disconnect() end
-		volando = false
-	end
-	if saltoActivo then
-		Humanoid.JumpPower = 50
-		saltoActivo = false
-	end
-	Humanoid.Health = 0
-end)
-
--- Variables para toggles
-local saltoActivo = false
-local volando = false
-local volarLoop
-
--- Tecla para abrir/cerrar todo
+-- Tecla M para abrir/cerrar todo
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if not gameProcessed and input.KeyCode == Enum.KeyCode.M then
-		ScreenGui.Enabled = not ScreenGui.Enabled
-		ConfigPanel.Visible = false
+		MainPanel.Visible = not MainPanel.Visible
+		if not MainPanel.Visible then ConfigPanel.Visible = false end
 	end
 end)
