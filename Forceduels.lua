@@ -58,13 +58,16 @@ local function createCircleButton(text, position, size)
     return button
 end
 
--- Crear botón CARRY SPEED (arriba)
+-- Crear botón TP DOWN (arriba izquierda)
+local tpButton = createCircleButton("TP\nDOWN", Vector2.new(20, 20), 70)
+
+-- Crear botón CARRY SPEED (arriba derecha)
 local carryButton = createCircleButton("CARRY\nSPEED", Vector2.new(95, 20), 70)
 
--- Crear botón TP DOWN (izquierda abajo)
-local tpButton = createCircleButton("TP\nDOWN", Vector2.new(20, 95), 70)
+-- Crear botón LAGGER MODE (abajo izquierda)
+local laggerButton = createCircleButton("LAGGER\nMODE", Vector2.new(20, 95), 70)
 
--- Crear botón INSTA RESET (derecha abajo)
+-- Crear botón INSTA RESET (abajo derecha)
 local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(95, 95), 70)
 
 -- Hacer que el menú sea movible
