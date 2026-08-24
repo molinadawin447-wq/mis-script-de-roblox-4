@@ -11,7 +11,7 @@ local startPos = nil
 
 -- Marco principal (transparente y movible)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 220, 0, 240)
+mainFrame.Size = UDim2.new(0, 200, 0, 260)
 mainFrame.Position = UDim2.new(0, 10, 0, 10)
 mainFrame.BackgroundTransparency = 1
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -67,19 +67,19 @@ local function createCircleButton(text, position, size)
 end
 
 -- Crear botón TP DOWN (arriba izquierda)
-local tpButton = createCircleButton("TP\nDOWN", Vector2.new(15, 15), 60)
+local tpButton = createCircleButton("TP\nDOWN", Vector2.new(15, 15), 55)
 
 -- Crear botón CARRY SPEED (arriba derecha)
-local carryButton = createCircleButton("CARRY\nSPEED", Vector2.new(90, 15), 60)
+local carryButton = createCircleButton("CARRY\nSPEED", Vector2.new(130, 15), 55)
 
 -- Crear botón LAGGER MODE (abajo izquierda)
-local laggerButton = createCircleButton("LAGGER\nMODE", Vector2.new(15, 90), 60)
+local laggerButton = createCircleButton("LAGGER\nMODE", Vector2.new(15, 85), 55)
+
+-- Crear botón LAGGER CARRY (debajo de LAGGER MODE)
+local laggerCarryButton = createCircleButton("LAGGER\nCARRY", Vector2.new(15, 155), 55)
 
 -- Crear botón INSTA RESET (abajo derecha)
-local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(90, 90), 60)
-
--- Crear botón LAGGER CARRY (abajo en el centro)
-local laggerCarryButton = createCircleButton("LAGGER\nCARRY", Vector2.new(52, 165), 60)
+local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(130, 85), 55)
 
 -- Hacer que el menú sea movible
 mainFrame.InputBegan:Connect(function(input)
