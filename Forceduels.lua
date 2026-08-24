@@ -11,7 +11,7 @@ local startPos = nil
 
 -- Marco principal (transparente y movible)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 460, 0, 190)
+mainFrame.Size = UDim2.new(0, 100, 0, 130)
 mainFrame.Position = UDim2.new(0, 10, 0, 10)
 mainFrame.BackgroundTransparency = 1
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -58,39 +58,8 @@ local function createCircleButton(text, position, size)
     return button
 end
 
--- Posiciones de los botones (organizados por filas como en la imagen)
-local buttons = {
-    -- Fila 1
-    {text = "DROP", pos = Vector2.new(0, 0)},
-    {text = "AUTO", pos = Vector2.new(65, 0)},
-    {text = "AUTO", pos = Vector2.new(130, 0)},
-    {text = "AUTO", pos = Vector2.new(195, 0)},
-    -- Fila 2
-    {text = "TP", pos = Vector2.new(260, 0)},
-    {text = "CARRY", pos = Vector2.new(325, 0)},
-    {text = "LAGGER", pos = Vector2.new(0, 65)},
-    {text = "INSTA", pos = Vector2.new(65, 65)},
-    -- Fila 3
-    {text = "LAGGER", pos = Vector2.new(130, 65)},
-    {text = "BAT", pos = Vector2.new(195, 65)},
-    {text = "BRAINROT", pos = Vector2.new(260, 65)},
-    {text = "LEFT", pos = Vector2.new(325, 65)},
-    -- Fila 4
-    {text = "BAT", pos = Vector2.new(0, 130)},
-    {text = "RIGHT", pos = Vector2.new(65, 130)},
-    {text = "DOWN", pos = Vector2.new(130, 130)},
-    {text = "SPEED", pos = Vector2.new(195, 130)},
-    -- Fila 5
-    {text = "MODE", pos = Vector2.new(260, 130)},
-    {text = "RESET", pos = Vector2.new(325, 130)},
-    {text = "CARRY", pos = Vector2.new(0, 195)},
-    {text = "TP", pos = Vector2.new(65, 195)}
-}
-
--- Crear todos los botones
-for _, btnData in ipairs(buttons) do
-    createCircleButton(btnData.text, btnData.pos, 55)
-end
+-- Crear botón INSTA RESET (con las dos palabras)
+local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(20, 20), 70)
 
 -- Hacer que el menú sea movible
 mainFrame.InputBegan:Connect(function(input)
