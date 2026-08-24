@@ -11,7 +11,7 @@ local startPos = nil
 
 -- Marco principal (transparente y movible)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 190, 0, 250)
+mainFrame.Size = UDim2.new(0, 170, 0, 210)
 mainFrame.Position = UDim2.new(0, 10, 0, 10)
 mainFrame.BackgroundTransparency = 1
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -20,7 +20,7 @@ mainFrame.Parent = screenGui
 -- Función para crear botones circulares
 local function createCircleButton(text, position, size)
     local button = Instance.new("Frame")
-    button.Size = UDim2.new(0, size or 50, 0, size or 50)
+    button.Size = UDim2.new(0, size or 45, 0, size or 45)
     button.Position = UDim2.new(0, position.X, 0, position.Y)
     button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     button.BackgroundTransparency = 0
@@ -67,22 +67,22 @@ local function createCircleButton(text, position, size)
 end
 
 -- Crear botón TP DOWN (arriba izquierda)
-local tpButton = createCircleButton("TP\nDOWN", Vector2.new(10, 10), 50)
+local tpButton = createCircleButton("TP\nDOWN", Vector2.new(10, 10), 45)
 
 -- Crear botón CARRY SPEED (arriba derecha)
-local carryButton = createCircleButton("CARRY\nSPEED", Vector2.new(125, 10), 50)
+local carryButton = createCircleButton("CARRY\nSPEED", Vector2.new(115, 10), 45)
 
 -- Crear botón LAGGER MODE (abajo izquierda)
-local laggerButton = createCircleButton("LAGGER\nMODE", Vector2.new(10, 75), 50)
+local laggerButton = createCircleButton("LAGGER\nMODE", Vector2.new(10, 65), 45)
 
 -- Crear botón LAGGER CARRY (debajo de LAGGER MODE)
-local laggerCarryButton = createCircleButton("LAGGER\nCARRY", Vector2.new(10, 140), 50)
+local laggerCarryButton = createCircleButton("LAGGER\nCARRY", Vector2.new(10, 120), 45)
 
 -- Crear botón INSTA RESET (abajo derecha)
-local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(125, 75), 50)
+local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(115, 65), 45)
 
 -- Crear botón BAT TP (debajo de INSTA RESET)
-local batTPButton = createCircleButton("BAT\nTP", Vector2.new(125, 140), 50)
+local batTPButton = createCircleButton("BAT\nTP", Vector2.new(115, 120), 45)
 
 -- Hacer que el menú sea movible
 mainFrame.InputBegan:Connect(function(input)
