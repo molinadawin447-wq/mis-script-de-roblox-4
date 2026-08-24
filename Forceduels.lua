@@ -11,7 +11,7 @@ local startPos = nil
 
 -- Marco principal (transparente y movible)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 100, 0, 130)
+mainFrame.Size = UDim2.new(0, 180, 0, 130)
 mainFrame.Position = UDim2.new(0, 10, 0, 10)
 mainFrame.BackgroundTransparency = 1
 mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -58,8 +58,11 @@ local function createCircleButton(text, position, size)
     return button
 end
 
--- Crear botón INSTA RESET (con las dos palabras)
-local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(20, 20), 70)
+-- Crear botón TP DOWN (izquierda)
+local tpButton = createCircleButton("TP\nDOWN", Vector2.new(20, 20), 70)
+
+-- Crear botón INSTA RESET (derecha)
+local instaButton = createCircleButton("INSTA\nRESET", Vector2.new(95, 20), 70)
 
 -- Hacer que el menú sea movible
 mainFrame.InputBegan:Connect(function(input)
