@@ -1,597 +1,190 @@
 --[[
-    SCRIPT LOCAL PARA DUELOS PVP - ROBA UN BRAINROT
-    - Sistema de combate con habilidades brainrot
-    - Detección de enemigos cercanos
-    - Efectos visuales y de sonido
-    - Sistema de daño con temática de memes
+    Script Local: Fenix Hub UI
+    Hecho por: Tu Nombre
+    Descripción: Interfaz organizada como en la imagen, con botones y funcionalidades básicas.
 ]]
 
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
+local Player = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
-local Debris = game:GetService("Debris")
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
+-- Configuración de la interfaz
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "FenixHubGUI"
+ScreenGui.Parent = Player:WaitForChild("PlayerGui")
 
--- CONFIGURACIÓN DE BRAINROT
-local BRAINROT_CONFIG = {
-    -- Habilidades
-    SKILLS = {
-        BRAINROT_BLAST = {
-            Name = "🧠 Brainrot Blast",
-            Cooldown = 3,
-            Damage = 20,
-            Range = 15,
-            Color = Color3.fromRGB(255, 0, 200)
-        },
-        SIGMA_STRIKE = {
-            Name = "⚔️ Sigma Strike",
-            Cooldown = 2,
-            Damage = 15,
-            Range = 8,
-            Color = Color3.fromRGB(0, 255, 200)
-        },
-        RIZZ_FLASH = {
-            Name = "🔥 Rizz Flash",
-            Cooldown = 5,
-            Damage = 30,
-            Range = 5,
-            Color = Color3.fromRGB(255, 150, 0)
-        },
-        FANUM_TAX = {
-            Name = "💰 Fanum Tax",
-            Cooldown = 4,
-            Damage = 10,
-            Range = 10,
-            Color = Color3.fromRGB(0, 255, 0)
-        }
-    },
-    
-    -- Frases brainrot
-    PHRASES = {
-        "SKIBIDI SIGMA! 💀",
-        "FANUM TAX! 🤑",
-        "WHAT THE SIGMA?! 🤯",
-        "RIZZ LEVEL 100! 😎",
-        "GYATTT! 🥵",
-        "NO CAP! 🧢",
-        "BET! 🎰",
-        "SUS! 👾",
-        "AMOGUS! 🚀",
-        "MOEWING! 🐱",
-        "SHEEEEEESH! 🔥",
-        "L RATIO! 📉",
-        "CAPPIN'! 🤥",
-        "BASED! 💪",
-        "COOKING! 🍳",
-        "LET HIM COOK! 👨‍🍳",
-        "MAIN CHARACTER! 🌟",
-        "NPC BEHAVIOR! 🗿",
-        "W RIZZ! 💯",
-        "L RIZZ! 😭"
-    },
-    
-    -- Efectos
-    EFFECTS = {
-        PARTICLE_COUNT = 30,
-        EXPLOSION_SIZE = 5,
-        FLOATING_TEXT_DURATION = 2
-    }
-}
+-- Frame principal (con estilo oscuro y bordes redondeados)
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 300, 0, 450) -- Tamaño compacto
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -225)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+MainFrame.BorderSizePixel = 0
+MainFrame.ClipsDescendants = true
+MainFrame.Parent = ScreenGui
 
--- CREAR GUI DE DUELO
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "BrainrotDuelGUI"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
+-- Esquinas redondeadas (usando UICorner)
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 8)
+Corner.Parent = MainFrame
 
--- BARRA DE SALUD Y HUD
-local hudFrame = Instance.new("Frame")
-hudFrame.Size = UDim2.new(0, 300, 0, 80)
-hudFrame.Position = UDim2.new(0.5, -150, 0.02, 0)
-hudFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-hudFrame.BackgroundTransparency = 0.3
-hudFrame.BorderSizePixel = 2
-hudFrame.BorderColor3 = Color3.fromRGB(255, 0, 200)
-hudFrame.Parent = screenGui
+-- Título
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+Title.Text = "FENIX HUB"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+Title.Font = Enum.Font.GothamBold
+Title.Parent = MainFrame
 
--- TÍTULO DEL JUEGO
-local gameTitle = Instance.new("TextLabel")
-gameTitle.Size = UDim2.new(1, 0, 0, 25)
-gameTitle.Position = UDim2.new(0, 0, 0, 0)
-gameTitle.BackgroundTransparency = 1
-gameTitle.Text = "⚔️ ROBA UN BRAINROT - DUELO ⚔️"
-gameTitle.TextColor3 = Color3.fromRGB(255, 0, 200)
-gameTitle.TextScaled = true
-gameTitle.Font = Enum.Font.Bangers
-gameTitle.Parent = hudFrame
+-- Borde inferior del título
+local TitleLine = Instance.new("Frame")
+TitleLine.Size = UDim2.new(1, 0, 0, 2)
+TitleLine.Position = UDim2.new(0, 0, 0, 30)
+TitleLine.BackgroundColor3 = Color3.fromRGB(80, 80, 120)
+TitleLine.BorderSizePixel = 0
+TitleLine.Parent = MainFrame
 
--- BARRA DE SALUD DEL JUGADOR
-local healthFrame = Instance.new("Frame")
-healthFrame.Size = UDim2.new(0.45, 0, 0, 20)
-healthFrame.Position = UDim2.new(0.02, 0, 0.5, 0)
-healthFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-healthFrame.BorderSizePixel = 1
-healthFrame.Parent = hudFrame
-
-local healthBar = Instance.new("Frame")
-healthBar.Size = UDim2.new(1, 0, 1, 0)
-healthBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-healthBar.BorderSizePixel = 0
-healthBar.Parent = healthFrame
-
-local healthText = Instance.new("TextLabel")
-healthText.Size = UDim2.new(1, 0, 1, 0)
-healthText.BackgroundTransparency = 1
-healthText.Text = "100/100 HP"
-healthText.TextColor3 = Color3.fromRGB(255, 255, 255)
-healthText.TextScaled = true
-healthText.Font = Enum.Font.GothamBold
-healthText.Parent = healthFrame
-
--- BARRA DE ENERGÍA BRAINROT
-local energyFrame = Instance.new("Frame")
-energyFrame.Size = UDim2.new(0.45, 0, 0, 10)
-energyFrame.Position = UDim2.new(0.02, 0, 0.75, 0)
-energyFrame.BackgroundColor3 = Color3.fromRGB(30, 0, 30)
-energyFrame.BorderSizePixel = 1
-energyFrame.Parent = hudFrame
-
-local energyBar = Instance.new("Frame")
-energyBar.Size = UDim2.new(1, 0, 1, 0)
-energyBar.BackgroundColor3 = Color3.fromRGB(255, 0, 200)
-energyBar.BorderSizePixel = 0
-energyBar.Parent = energyFrame
-
-local energyText = Instance.new("TextLabel")
-energyText.Size = UDim2.new(1, 0, 1, 0)
-energyText.BackgroundTransparency = 1
-energyText.Text = "BRAINROT: 100%"
-energyText.TextColor3 = Color3.fromRGB(255, 255, 255)
-energyText.TextScaled = true
-energyText.Font = Enum.Font.GothamBold
-energyText.Parent = energyFrame
-
--- HUD DE HABILIDADES
-local skillsFrame = Instance.new("Frame")
-skillsFrame.Size = UDim2.new(0, 300, 0, 60)
-skillsFrame.Position = UDim2.new(0.5, -150, 0.9, 0)
-skillsFrame.BackgroundTransparency = 1
-skillsFrame.Parent = screenGui
-
-local skillButtons = {}
-local skillCooldowns = {}
-
--- CREAR BOTONES DE HABILIDADES
-local skillNames = {"Brainrot Blast", "Sigma Strike", "Rizz Flash", "Fanum Tax"}
-local skillKeys = {"Q", "E", "R", "F"}
-local skillColors = {
-    Color3.fromRGB(255, 0, 200),
-    Color3.fromRGB(0, 255, 200),
-    Color3.fromRGB(255, 150, 0),
-    Color3.fromRGB(0, 255, 0)
-}
-
-for i = 1, 4 do
+-- Función para crear botones
+local function createButton(parent, text, position, size, color, callback)
     local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0.22, 0, 1, 0)
-    button.Position = UDim2.new((i-1) * 0.26 + 0.01, 0, 0, 0)
-    button.BackgroundColor3 = skillColors[i]
-    button.BackgroundTransparency = 0.3
-    button.BorderSizePixel = 2
-    button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    button.Text = skillNames[i] .. "\n[" .. skillKeys[i] .. "]"
+    button.Size = size or UDim2.new(0, 60, 0, 30)
+    button.Position = position
+    button.BackgroundColor3 = color or Color3.fromRGB(60, 60, 90)
+    button.Text = text
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.TextScaled = true
-    button.Font = Enum.Font.GothamBold
-    button.Parent = skillsFrame
+    button.Font = Enum.Font.GothamMedium
+    button.BorderSizePixel = 0
+    button.Parent = parent
     
-    skillButtons[skillKeys[i]] = button
-    skillCooldowns[skillKeys[i]] = 0
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = button
     
-    -- Tooltip
-    local tooltip = Instance.new("TextLabel")
-    tooltip.Size = UDim2.new(1, 0, 0.4, 0)
-    tooltip.Position = UDim2.new(0, 0, -0.5, 0)
-    tooltip.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    tooltip.BackgroundTransparency = 0.8
-    tooltip.Text = "Daño: " .. BRAINROT_CONFIG.SKILLS[skillNames[i]:gsub(" ", "_"):upper()].Damage .. " | Rango: " .. BRAINROT_CONFIG.SKILLS[skillNames[i]:gsub(" ", "_"):upper()].Range .. "m"
-    tooltip.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tooltip.TextScaled = true
-    tooltip.Font = Enum.Font.GothamBold
-    tooltip.Visible = false
-    tooltip.Parent = button
-    
-    button.MouseEnter:Connect(function()
-        tooltip.Visible = true
-    end)
-    
-    button.MouseLeave:Connect(function()
-        tooltip.Visible = false
-    end)
+    button.MouseButton1Click:Connect(callback or function() end)
+    return button
 end
 
--- VARIABLES DEL JUGADOR
-local playerHealth = 100
-local maxHealth = 100
-local brainrotEnergy = 100
-local maxEnergy = 100
-local isDead = false
-local enemies = {}
-local currentTarget = nil
-
--- FUNCIÓN PARA OBTENER ENEMIGOS CERCANOS
-function getNearbyEnemies(range)
-    local nearby = {}
-    local players = Players:GetPlayers()
-    
-    for _, p in pairs(players) do
-        if p ~= player then
-            local char = p.Character
-            if char and char:FindFirstChild("HumanoidRootPart") and char:FindFirstChild("Humanoid") then
-                local distance = (rootPart.Position - char.HumanoidRootPart.Position).Magnitude
-                if distance <= range then
-                    table.insert(nearby, {
-                        Player = p,
-                        Character = char,
-                        Distance = distance,
-                        Humanoid = char.Humanoid,
-                        RootPart = char.HumanoidRootPart
-                    })
-                end
-            end
-        end
-    end
-    
-    -- Ordenar por distancia
-    table.sort(nearby, function(a, b)
-        return a.Distance < b.Distance
-    end)
-    
-    return nearby
-end
-
--- FUNCIÓN PARA OBTENER EL ENEMIGO MÁS CERCANO
-function getClosestEnemy(range)
-    local enemies = getNearbyEnemies(range)
-    if #enemies > 0 then
-        return enemies[1]
-    end
-    return nil
-end
-
--- FUNCIÓN PARA CREAR EFECTO DE PARTÍCULAS
-function createParticleEffect(position, color, count, size)
-    for i = 1, count do
-        local particle = Instance.new("Part")
-        particle.Size = Vector3.new(size or 0.5, size or 0.5, size or 0.5)
-        particle.Position = position + Vector3.new(
-            math.random(-5, 5),
-            math.random(-5, 5),
-            math.random(-5, 5)
-        )
-        particle.Anchored = true
-        particle.CanCollide = false
-        particle.Material = Enum.Material.Neon
-        particle.BrickColor = BrickColor.new(color)
-        particle.Parent = Workspace
-        
-        local velocity = Vector3.new(
-            math.random(-20, 20),
-            math.random(-10, 20),
-            math.random(-20, 20)
-        )
-        
-        -- Animación de partícula
-        local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-        local tween = TweenService:Create(particle, tweenInfo, {
-            Position = particle.Position + velocity,
-            Size = Vector3.new(0, 0, 0)
-        })
-        tween:Play()
-        
-        Debris:AddItem(particle, 1.5)
-    end
-end
-
--- FUNCIÓN PARA CREAR TEXTO FLOTANTE
-function createFloatingText(position, text, color, size)
-    local billboard = Instance.new("BillboardGui")
-    billboard.Size = UDim2.new(0, 200, 0, 50)
-    billboard.Adornee = Workspace.Terrain
-    billboard.Parent = Workspace
-    
+-- Función para crear etiquetas
+local function createLabel(parent, text, position, size, color)
     local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(1, 0, 1, 0)
+    label.Size = size or UDim2.new(0, 60, 0, 20)
+    label.Position = position
     label.BackgroundTransparency = 1
     label.Text = text
-    label.TextColor3 = color or Color3.fromRGB(255, 255, 255)
+    label.TextColor3 = color or Color3.fromRGB(200, 200, 200)
     label.TextScaled = true
-    label.Font = Enum.Font.Bangers
-    label.Parent = billboard
-    
-    -- Mover el billboard a la posición
-    billboard.Position = position
-    
-    -- Animación
-    local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tween = TweenService:Create(billboard, tweenInfo, {
-        Position = position + Vector3.new(0, 10, 0)
-    })
-    tween:Play()
-    
-    Debris:AddItem(billboard, 2)
+    label.Font = Enum.Font.GothamMedium
+    label.Parent = parent
+    return label
 end
 
--- FUNCIÓN PARA MOSTRAR TEXTO EN PANTALLA
-function showScreenText(text, color, duration)
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.new(0, 500, 0, 80)
-    label.Position = UDim2.new(0.5, -250, 0.4, 0)
-    label.BackgroundTransparency = 1
-    label.Text = text
-    label.TextColor3 = color or Color3.fromRGB(255, 0, 200)
-    label.TextScaled = true
-    label.Font = Enum.Font.Bangers
-    label.Parent = screenGui
-    
-    task.wait(duration or 1.5)
-    label:Destroy()
+-- ================== ORGANIZACIÓN DE BOTONES ==================
+
+-- Fila 1 (Y = 40): DESBLOQUEAR, BRAIN, DROP
+createButton(MainFrame, "DESBLOQUEAR", UDim2.new(0.05, 0, 0, 40), UDim2.new(0, 85, 0, 30), Color3.fromRGB(70, 40, 120))
+createButton(MainFrame, "BRAIN", UDim2.new(0.38, 0, 0, 40), UDim2.new(0, 60, 0, 30), Color3.fromRGB(40, 70, 120))
+createButton(MainFrame, "DROP", UDim2.new(0.68, 0, 0, 40), UDim2.new(0, 60, 0, 30), Color3.fromRGB(120, 40, 40))
+
+-- Fila 2 (Y = 80): AUTO LEFT, AUTO, AUTO
+createButton(MainFrame, "AUTO LEFT", UDim2.new(0.02, 0, 0, 80), UDim2.new(0, 90, 0, 30), Color3.fromRGB(40, 90, 40))
+createButton(MainFrame, "AUTO", UDim2.new(0.35, 0, 0, 80), UDim2.new(0, 60, 0, 30), Color3.fromRGB(40, 90, 40))
+createButton(MainFrame, "AUTO", UDim2.new(0.65, 0, 0, 80), UDim2.new(0, 60, 0, 30), Color3.fromRGB(40, 90, 40))
+
+-- Control deslizante: Menu Scale
+local ScaleLabel = createLabel(MainFrame, "Menu Scale", UDim2.new(0.05, 0, 0, 120), UDim2.new(0, 80, 0, 20))
+local ScaleValue = createLabel(MainFrame, "0.8", UDim2.new(0.75, 0, 0, 120), UDim2.new(0, 30, 0, 20), Color3.fromRGB(255, 200, 50))
+
+-- Fila 3 (Y = 150): BAT, RIGHT, Reset Mobile Positions
+createButton(MainFrame, "BAT", UDim2.new(0.05, 0, 0, 150), UDim2.new(0, 60, 0, 30), Color3.fromRGB(120, 80, 20))
+createButton(MainFrame, "RIGHT", UDim2.new(0.35, 0, 0, 150), UDim2.new(0, 60, 0, 30), Color3.fromRGB(20, 80, 120))
+createButton(MainFrame, "Reset Mobile", UDim2.new(0.65, 0, 0, 145), UDim2.new(0, 90, 0, 30), Color3.fromRGB(80, 20, 80))
+
+-- Fila 4 (Y = 190): TP, CARRY, DOWN
+createButton(MainFrame, "TP", UDim2.new(0.05, 0, 0, 190), UDim2.new(0, 60, 0, 30), Color3.fromRGB(20, 100, 20))
+createButton(MainFrame, "CARRY", UDim2.new(0.35, 0, 0, 190), UDim2.new(0, 70, 0, 30), Color3.fromRGB(100, 20, 100))
+createButton(MainFrame, "DOWN", UDim2.new(0.68, 0, 0, 190), UDim2.new(0, 60, 0, 30), Color3.fromRGB(20, 60, 100))
+
+-- Fila 5 (Y = 230): SPEED, CHARTER, Animation Pack
+createButton(MainFrame, "SPEED", UDim2.new(0.05, 0, 0, 230), UDim2.new(0, 65, 0, 30), Color3.fromRGB(100, 60, 20))
+createButton(MainFrame, "CHARTER", UDim2.new(0.38, 0, 0, 230), UDim2.new(0, 70, 0, 30), Color3.fromRGB(20, 60, 100))
+createButton(MainFrame, "Animation Pack", UDim2.new(0.68, 0, 0, 225), UDim2.new(0, 80, 0, 30), Color3.fromRGB(60, 20, 80))
+
+-- Fila 6 (Y = 270): LAGGE, INSTA, R
+createButton(MainFrame, "LAGGE", UDim2.new(0.05, 0, 0, 270), UDim2.new(0, 70, 0, 30), Color3.fromRGB(80, 80, 20))
+createButton(MainFrame, "INSTA", UDim2.new(0.38, 0, 0, 270), UDim2.new(0, 60, 0, 30), Color3.fromRGB(20, 80, 80))
+createButton(MainFrame, "R", UDim2.new(0.68, 0, 0, 270), UDim2.new(0, 40, 0, 30), Color3.fromRGB(120, 20, 20))
+
+-- Fila 7 (Y = 310): RESET, Apply Animation Pack
+createButton(MainFrame, "RESET", UDim2.new(0.05, 0, 0, 310), UDim2.new(0, 70, 0, 30), Color3.fromRGB(120, 30, 30))
+createButton(MainFrame, "Apply Animation Pack", UDim2.new(0.38, 0, 0, 310), UDim2.new(0, 130, 0, 30), Color3.fromRGB(30, 80, 30))
+
+-- Fila 8 (Y = 350): LAGGE, BAT, Headless
+createButton(MainFrame, "LAGGE", UDim2.new(0.02, 0, 0, 350), UDim2.new(0, 70, 0, 30), Color3.fromRGB(80, 80, 20))
+createButton(MainFrame, "BAT", UDim2.new(0.32, 0, 0, 350), UDim2.new(0, 60, 0, 30), Color3.fromRGB(120, 80, 20))
+createButton(MainFrame, "Headless", UDim2.new(0.58, 0, 0, 350), UDim2.new(0, 80, 0, 30), Color3.fromRGB(60, 40, 100))
+
+-- Fila 9 (Y = 390): R, TP, Korblox
+createButton(MainFrame, "R", UDim2.new(0.05, 0, 0, 390), UDim2.new(0, 40, 0, 30), Color3.fromRGB(120, 20, 20))
+createButton(MainFrame, "TP", UDim2.new(0.32, 0, 0, 390), UDim2.new(0, 60, 0, 30), Color3.fromRGB(20, 100, 20))
+createButton(MainFrame, "Korblox", UDim2.new(0.58, 0, 0, 390), UDim2.new(0, 80, 0, 30), Color3.fromRGB(100, 60, 20))
+
+-- Botones inferiores: IPANELS, Save Config, SAVE
+createButton(MainFrame, "IPANELS", UDim2.new(0.05, 0, 0, 420), UDim2.new(0, 70, 0, 25), Color3.fromRGB(40, 40, 100))
+createButton(MainFrame, "Save Config", UDim2.new(0.38, 0, 0, 420), UDim2.new(0, 80, 0, 25), Color3.fromRGB(40, 80, 40))
+createButton(MainFrame, "SAVE", UDim2.new(0.72, 0, 0, 420), UDim2.new(0, 60, 0, 25), Color3.fromRGB(80, 40, 20))
+
+-- ================== FUNCIONALIDADES BÁSICAS ==================
+
+-- Ejemplo de función para los botones (puedes personalizar)
+local function onButtonClick(buttonName)
+    print("Botón presionado: " .. buttonName)
+    -- Aquí puedes agregar la lógica para cada botón
 end
 
--- FUNCIÓN PARA EJECUTAR HABILIDAD
-function useSkill(skillKey)
-    local skillName = nil
-    for name, data in pairs(BRAINROT_CONFIG.SKILLS) do
-        if data.Key == skillKey then
-            skillName = name
-            break
-        end
+-- Conectar todos los botones (recorre todos los TextButton)
+for _, button in ipairs(MainFrame:GetDescendants()) do
+    if button:IsA("TextButton") then
+        local name = button.Text
+        button.MouseButton1Click:Connect(function()
+            onButtonClick(name)
+        end)
     end
-    
-    if not skillName then return end
-    
-    local skill = BRAINROT_CONFIG.SKILLS[skillName]
-    
-    -- Verificar cooldown
-    if skillCooldowns[skillKey] > 0 then
-        showScreenText("⏳ Habilidad en cooldown!", Color3.fromRGB(255, 0, 0), 0.8)
-        return
-    end
-    
-    -- Verificar energía
-    if brainrotEnergy < 20 then
-        showScreenText("❌ Energía Brainrot insuficiente!", Color3.fromRGB(255, 0, 0), 0.8)
-        return
-    end
-    
-    -- Buscar enemigo
-    local target = getClosestEnemy(skill.Range)
-    if not target then
-        showScreenText("🎯 No hay enemigos cerca!", Color3.fromRGB(255, 200, 0), 0.8)
-        return
-    end
-    
-    -- Aplicar daño
-    brainrotEnergy = math.max(0, brainrotEnergy - 20)
-    updateEnergyBar()
-    
-    local damage = skill.Damage + math.random(0, 5)
-    target.Humanoid.Health = math.max(0, target.Humanoid.Health - damage)
-    
-    -- Efectos visuales
-    local targetPos = target.RootPart.Position
-    createParticleEffect(targetPos, skill.Color, BRAINROT_CONFIG.EFFECTS.PARTICLE_COUNT, 1)
-    createParticleEffect(targetPos, Color3.fromRGB(255, 255, 255), 10, 0.5)
-    
-    -- Texto flotante
-    local phrase = BRAINROT_CONFIG.PHRASES[math.random(1, #BRAINROT_CONFIG.PHRASES)]
-    createFloatingText(
-        targetPos + Vector3.new(0, 3, 0),
-        "-" .. damage .. " " .. phrase,
-        skill.Color,
-        2
-    )
-    
-    showScreenText(
-        "💥 " .. skill.Name .. "! -" .. damage .. " HP!",
-        skill.Color,
-        1
-    )
-    
-    -- Efecto de sonido (simulado)
-    if UserInputService.VibrateDevice then
-        UserInputService:VibrateDevice(50)
-    end
-    
-    -- Cooldown
-    skillCooldowns[skillKey] = skill.Cooldown
-    
-    -- Verificar si el enemigo murió
-    if target.Humanoid.Health <= 0 then
-        showScreenText("💀 " .. target.Player.Name .. " ha sido eliminado! 💀", Color3.fromRGB(255, 0, 0), 2)
-        createParticleEffect(targetPos, Color3.fromRGB(255, 0, 0), 50, 2)
-        createFloatingText(
-            targetPos + Vector3.new(0, 5, 0),
-            "💀 L RATIO! 💀",
-            Color3.fromRGB(255, 0, 0),
-            3
-        )
+end
+
+-- ================== DRAG PARA MOVER LA GUI ==================
+
+local dragging = false
+local dragInput, dragStart, startPos
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
         
-        -- Recompensa de energía
-        brainrotEnergy = math.min(maxEnergy, brainrotEnergy + 30)
-        updateEnergyBar()
-    end
-end
-
--- FUNCIÓN PARA ACTUALIZAR BARRA DE SALUD
-function updateHealthBar()
-    local healthPercent = playerHealth / maxHealth
-    healthBar.Size = UDim2.new(healthPercent, 0, 1, 0)
-    
-    if healthPercent > 0.5 then
-        healthBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
-    elseif healthPercent > 0.25 then
-        healthBar.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
-    else
-        healthBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    end
-    
-    healthText.Text = math.floor(playerHealth) .. "/" .. maxHealth .. " HP"
-end
-
--- FUNCIÓN PARA ACTUALIZAR BARRA DE ENERGÍA
-function updateEnergyBar()
-    local energyPercent = brainrotEnergy / maxEnergy
-    energyBar.Size = UDim2.new(energyPercent, 0, 1, 0)
-    energyText.Text = "BRAINROT: " .. math.floor(brainrotEnergy) .. "%"
-end
-
--- FUNCIÓN PARA RECIBIR DAÑO
-function takeDamage(damage, attacker)
-    if isDead then return end
-    
-    playerHealth = math.max(0, playerHealth - damage)
-    updateHealthBar()
-    
-    if playerHealth <= 0 then
-        isDead = true
-        showScreenText("💀 HAS SIDO ELIMINADO! 💀", Color3.fromRGB(255, 0, 0), 3)
-        showScreenText("L RATIO! 💀", Color3.fromRGB(255, 0, 0), 2)
-        humanoid.Health = 0
-    end
-end
-
--- FUNCIÓN PARA REGENERAR ENERGÍA
-function regenerateEnergy()
-    if isDead then return end
-    brainrotEnergy = math.min(maxEnergy, brainrotEnergy + 0.5)
-    updateEnergyBar()
-end
-
--- FUNCIÓN PARA BUSCAR ENEMIGOS CERCANOS
-function scanForEnemies()
-    local nearby = getNearbyEnemies(20)
-    
-    -- Actualizar lista de enemigos
-    enemies = nearby
-    
-    -- Si hay un objetivo actual, verificar si sigue vivo
-    if currentTarget then
-        local found = false
-        for _, enemy in pairs(enemies) do
-            if enemy.Player == currentTarget then
-                found = true
-                break
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
             end
-        end
-        if not found then
-            currentTarget = nil
-        end
-    end
-    
-    -- Si no hay objetivo, seleccionar el más cercano
-    if not currentTarget and #enemies > 0 then
-        currentTarget = enemies[1].Player
-    end
-end
-
--- CONEXIÓN DE HABILIDADES A TECLAS
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    if input.KeyCode == Enum.KeyCode.Q then
-        useSkill("Q")
-    elseif input.KeyCode == Enum.KeyCode.E then
-        useSkill("E")
-    elseif input.KeyCode == Enum.KeyCode.R then
-        useSkill("R")
-    elseif input.KeyCode == Enum.KeyCode.F then
-        useSkill("F")
-    elseif input.KeyCode == Enum.KeyCode.LeftShift then
-        -- Dash (esprintar)
-        if brainrotEnergy >= 10 then
-            brainrotEnergy = math.max(0, brainrotEnergy - 10)
-            updateEnergyBar()
-            showScreenText("💨 DASH!", Color3.fromRGB(0, 200, 255), 0.5)
-            -- Simular dash
-            local dashDirection = rootPart.CFrame.LookVector * 20
-            rootPart.Position = rootPart.Position + dashDirection
-            createParticleEffect(rootPart.Position, Color3.fromRGB(0, 200, 255), 20, 0.5)
-        else
-            showScreenText("❌ Energía insuficiente!", Color3.fromRGB(255, 0, 0), 0.5)
-        end
+        end)
     end
 end)
 
--- CONEXIÓN DE BOTONES DE HABILIDADES
-for key, button in pairs(skillButtons) do
-    button.MouseButton1Click:Connect(function()
-        useSkill(key)
-    end)
-end
-
--- LOOP PRINCIPAL
-RunService.Heartbeat:Connect(function()
-    -- Actualizar salud desde el humanoid
-    if humanoid then
-        playerHealth = humanoid.Health
-        updateHealthBar()
-    end
-    
-    -- Regenerar energía
-    regenerateEnergy()
-    
-    -- Escanear enemigos
-    scanForEnemies()
-    
-    -- Actualizar cooldowns
-    for key, cooldown in pairs(skillCooldowns) do
-        if cooldown > 0 then
-            skillCooldowns[key] = math.max(0, cooldown - 0.1)
-            skillButtons[key].BackgroundTransparency = 0.7
-        else
-            skillButtons[key].BackgroundTransparency = 0.3
-        end
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
     end
 end)
 
--- ACTUALIZAR SALUD CUANDO EL HUMANÓIDE CAMBIA
-humanoid:GetPropertyChangedSignal("Health"):Connect(function()
-    playerHealth = humanoid.Health
-    updateHealthBar()
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 end)
 
--- REVIVIR CUANDO EL JUGADOR RESPAWNEA
-player.CharacterAdded:Connect(function(newCharacter)
-    character = newCharacter
-    humanoid = character:WaitForChild("Humanoid")
-    rootPart = character:WaitForChild("HumanoidRootPart")
-    isDead = false
-    playerHealth = maxHealth
-    brainrotEnergy = maxEnergy
-    updateHealthBar()
-    updateEnergyBar()
-    showScreenText("🔄 HAS RESPAWNEADO! 🔄", Color3.fromRGB(0, 255, 0), 1)
-end)
-
--- INICIALIZAR
-updateHealthBar()
-updateEnergyBar()
-showScreenText("🎮 BIENVENIDO AL DUELO BRAINROT! 🎮", Color3.fromRGB(255, 0, 200), 2)
-showScreenText("Q/E/R/F = HABILIDADES | SHIFT = DASH", Color3.fromRGB(255, 255, 255), 2)
-
-print("🔥 ROBA UN BRAINROT - DUELO PVP CARGADO!")
-print("🎮 HABILIDADES: Q, E, R, F")
-print("💨 DASH: SHIFT")
-print("⚔️ ENCUENTRA ENEMIGOS Y DERROTALOS!")
-
--- EFECTO DE BIENVENIDA
-task.wait(1)
-createParticleEffect(rootPart.Position, Color3.fromRGB(255, 0, 200), 30, 1)
+-- ================== CIERRE DE LA GUI (OPCIONAL) ==================
+-- Puedes agregar un botón de cierre si lo deseas
