@@ -19,17 +19,27 @@ mainFrame.Parent = screenGui
 
 -- Función para crear botones circulares
 local function createCircleButton(text, position, size)
-    local button = Instance.new("ImageButton")
+    local button = Instance.new("Frame")
     button.Size = UDim2.new(0, size or 60, 0, size or 60)
     button.Position = UDim2.new(0, position.X, 0, position.Y)
-    button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    button.BackgroundTransparency = 0.3
+    button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    button.BackgroundTransparency = 0
     button.BorderSizePixel = 2
     button.BorderColor3 = Color3.fromRGB(255, 255, 255)
-    button.Image = "rbxassetid://14560911477" -- Imagen circular
-    button.ImageColor3 = Color3.fromRGB(30, 30, 30)
-    button.ImageTransparency = 0.3
     button.Parent = mainFrame
+    
+    -- Hacer el frame circular
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(1, 0)
+    corner.Parent = button
+    
+    -- Botón clickeable
+    local clickButton = Instance.new("ImageButton")
+    clickButton.Size = UDim2.new(1, 0, 1, 0)
+    clickButton.Position = UDim2.new(0, 0, 0, 0)
+    clickButton.BackgroundTransparency = 1
+    clickButton.ImageTransparency = 1
+    clickButton.Parent = button
     
     -- Label del texto dentro del botón
     local textLabel = Instance.new("TextLabel")
@@ -46,13 +56,11 @@ local function createCircleButton(text, position, size)
     textLabel.Parent = button
     
     -- Efecto hover
-    button.MouseEnter:Connect(function()
-        button.ImageTransparency = 0
-        button.BackgroundTransparency = 0
+    clickButton.MouseEnter:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     end)
-    button.MouseLeave:Connect(function()
-        button.ImageTransparency = 0.3
-        button.BackgroundTransparency = 0.3
+    clickButton.MouseLeave:Connect(function()
+        button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     end)
     
     return button
