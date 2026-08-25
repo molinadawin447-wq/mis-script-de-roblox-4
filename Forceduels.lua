@@ -93,13 +93,13 @@ end
 local selectedMode = "Main" -- "Main" o "Steal"
 local autoRoboState = false -- false = Off, true = On
 
--- ===== PANEL EMERGENTE (Force.vs) =====
+-- ===== PANEL EMERGENTE (Force.vs) - MÁS ALTO Y MÁS ANCHO =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 420, 0, 220)
-PanelFrame.Position = UDim2.new(0.5, -210, 0.5, -110)
+PanelFrame.Size = UDim2.new(0, 450, 0, 250) -- Antes 420x220
+PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -125) -- Centrado
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -121,12 +121,12 @@ TitleLabel.TextSize = 28
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.TextScaled = false
 
--- ===== LÍNEA DEBAJO DEL TÍTULO =====
+-- ===== LÍNEA DEBAJO DEL TÍTULO (más ancha) =====
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 370, 0, 2)
-LineFrame.Position = UDim2.new(0.5, -185, 0, 55)
+LineFrame.Size = UDim2.new(0, 400, 0, 2) -- Antes 370
+LineFrame.Position = UDim2.new(0.5, -200, 0, 55) -- Centrado
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
@@ -168,8 +168,8 @@ local RightContainer = Instance.new("Frame")
 RightContainer.Parent = PanelFrame
 RightContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 RightContainer.BackgroundTransparency = 1
-RightContainer.Size = UDim2.new(0, 200, 0, 100)
-RightContainer.Position = UDim2.new(0.5, -60, 0, 70)
+RightContainer.Size = UDim2.new(0, 200, 0, 120) -- Un poco más alto para el espacio
+RightContainer.Position = UDim2.new(0.5, -60, 0, 70) -- Misma posición
 
 -- ===== CONTENIDO DE MAIN =====
 local MainContent = Instance.new("Frame")
@@ -292,7 +292,7 @@ StealContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 StealContent.BackgroundTransparency = 1
 StealContent.Size = UDim2.new(0, 200, 0, 60)
 StealContent.Position = UDim2.new(0, 0, 0, 0)
-StealContent.Visible = false -- Inicialmente oculto
+StealContent.Visible = false
 
 -- Etiqueta "Robo Automático"
 local RoboLabel = Instance.new("TextLabel")
@@ -545,4 +545,4 @@ end)
 -- Inicialización
 updateContent()
 updateToggle()
-print("GUI con Main/Steal y toggle de Robo Automático creada correctamente!")
+print("GUI con panel más alto y ancho, y todo el contenido intacto.")
