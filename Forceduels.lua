@@ -19,8 +19,8 @@ ScreenGui.Name = "CustomGUI"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 200, 0, 350)
-MainFrame.Position = UDim2.new(1, -200, 0, 5)  -- Arriba a la derecha con margen pequeño
+MainFrame.Size = UDim2.new(0, 180, 0, 380) -- Marco más alto para botones cuadrados
+MainFrame.Position = UDim2.new(1, -180, 0, 0) -- Pegado a la derecha y arriba
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -32,7 +32,7 @@ MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 -- Plantilla de botón para los botones de la derecha (cuadrados, pequeños, con bordes redondeados)
 local RightButtonTemplate = Instance.new("TextButton")
 RightButtonTemplate.Parent = MainFrame
-RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 RightButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
 RightButtonTemplate.BorderSizePixel = 3
 RightButtonTemplate.BorderColor3 = Color3.fromRGB(255, 255, 255)
@@ -45,7 +45,7 @@ RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
 
 -- Plantilla de botón para el botón izquierdo (Force.vs)
 ButtonTemplate.Parent = MainFrameLeft
-ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+ButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
 ButtonTemplate.BorderSizePixel = 2
 ButtonTemplate.BorderColor3 = Color3.fromRGB(160, 160, 160)
@@ -68,11 +68,11 @@ local buttonsData = {
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 75, 0, 55) -- Botones cuadrados y pequeños
-local spacingX = 5
+local buttonSize = UDim2.new(0, 70, 0, 70) -- Botones cuadrados (70x70)
+local spacingX = 6
 local spacingY = 6
-local startX = 10
-local startY = 10
+local startX = 8
+local startY = 8
 
 -- Crear botones en el marco derecho
 for row = 0, 4 do
@@ -89,19 +89,19 @@ for row = 0, 4 do
         local data = buttonsData[index]
         btn.Text = data[1] .. "\n" .. data[2]
         
-        -- Esquinas redondeadas (más redondeadas para que sean como "□")
+        -- Esquinas redondeadas
         local corner = Instance.new("UICorner")
         corner.Parent = btn
         corner.CornerRadius = UDim.new(0, 12)
         
         btn.MouseEnter:Connect(function()
             btn.BorderColor3 = Color3.fromRGB(255, 255, 255)
-            btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         end)
         
         btn.MouseLeave:Connect(function()
             btn.BorderColor3 = Color3.fromRGB(255, 255, 255)
-            btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            btn.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
         end)
         
         btn.MouseButton1Click:Connect(function()
@@ -119,7 +119,7 @@ local autoRoboState = false
 -- ===== PANEL EMERGENTE (Force.vs) =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
-PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+PanelFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 PanelFrame.BackgroundTransparency = 0
 PanelFrame.Size = UDim2.new(0, 450, 0, 280)
 PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -140)
@@ -156,7 +156,7 @@ LineFrame.BorderSizePixel = 0
 -- ===== BOTONES SPEED Y STEAL =====
 local MainButton = Instance.new("TextButton")
 MainButton.Parent = PanelFrame
-MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainButton.Size = UDim2.new(0, 80, 0, 35)
 MainButton.Position = UDim2.new(0.5, -190, 0, 75)
 MainButton.Text = "Speed"
@@ -172,7 +172,7 @@ mainCorner.CornerRadius = UDim.new(0, 5)
 
 local StealButton = Instance.new("TextButton")
 StealButton.Parent = PanelFrame
-StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+StealButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 StealButton.Size = UDim2.new(0, 80, 0, 35)
 StealButton.Position = UDim2.new(0.5, -190, 0, 125)
 StealButton.Text = "Steal"
@@ -224,7 +224,7 @@ SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = SpeedContainer
-SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SpeedInput.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 SpeedInput.Size = UDim2.new(0, 80, 0, 30)
 SpeedInput.Position = UDim2.new(0, 115, 0, 2)
 SpeedInput.Text = tostring(savedSpeed)
@@ -276,7 +276,7 @@ CarryLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local CarryInput = Instance.new("TextBox")
 CarryInput.Parent = CarryContainer
-CarryInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+CarryInput.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 CarryInput.Size = UDim2.new(0, 80, 0, 30)
 CarryInput.Position = UDim2.new(0, 110, 0, 2)
 CarryInput.Text = tostring(savedCarry)
@@ -328,7 +328,7 @@ LaggerLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local LaggerInput = Instance.new("TextBox")
 LaggerInput.Parent = LaggerContainer
-LaggerInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+LaggerInput.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 LaggerInput.Size = UDim2.new(0, 80, 0, 30)
 LaggerInput.Position = UDim2.new(0, 115, 0, 2)
 LaggerInput.Text = tostring(savedLagger)
@@ -381,7 +381,7 @@ RoboLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = StealContent
-ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 ToggleButton.Size = UDim2.new(0, 60, 0, 30)
 ToggleButton.Position = UDim2.new(0, 150, 0, 2)
 ToggleButton.Text = "Off"
@@ -412,11 +412,11 @@ ToggleButton.MouseButton1Click:Connect(function()
 end)
 
 ToggleButton.MouseEnter:Connect(function()
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 end)
 
 ToggleButton.MouseLeave:Connect(function()
-    ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 end)
 
 -- ===== FUNCIONES DE VISIBILIDAD =====
@@ -424,16 +424,16 @@ local function updateContent()
     if selectedMode == "Main" then
         MainContent.Visible = true
         StealContent.Visible = false
-        MainButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        MainButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         MainButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
-        StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        StealButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
         StealButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
     else
         MainContent.Visible = false
         StealContent.Visible = true
-        StealButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        StealButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         StealButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
-        MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        MainButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
         MainButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
     end
 end
@@ -450,32 +450,32 @@ end)
 
 MainButton.MouseEnter:Connect(function()
     if selectedMode ~= "Main" then
-        MainButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        MainButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     end
 end)
 
 MainButton.MouseLeave:Connect(function()
     if selectedMode ~= "Main" then
-        MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        MainButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     end
 end)
 
 StealButton.MouseEnter:Connect(function()
     if selectedMode ~= "Steal" then
-        StealButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        StealButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     end
 end)
 
 StealButton.MouseLeave:Connect(function()
     if selectedMode ~= "Steal" then
-        StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        StealButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     end
 end)
 
 -- ===== BOTÓN CERRAR =====
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = PanelFrame
-CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+CloseButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 CloseButton.Size = UDim2.new(0, 30, 0, 30)
 CloseButton.Position = UDim2.new(1, -40, 0, 10)
 CloseButton.Text = "✕"
@@ -491,12 +491,12 @@ closeCorner.Parent = CloseButton
 closeCorner.CornerRadius = UDim.new(0, 5)
 
 CloseButton.MouseEnter:Connect(function()
-    CloseButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 end)
 
 CloseButton.MouseLeave:Connect(function()
-    CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
 end)
 
@@ -510,7 +510,7 @@ leftButton.Parent = MainFrameLeft
 leftButton.Size = UDim2.new(0, 110, 0, 45)
 leftButton.Position = UDim2.new(0.5, -55, 0.5, -22.5)
 leftButton.Text = "Force.vs"
-leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+leftButton.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 leftButton.BorderSizePixel = 2
 leftButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
 leftButton.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -523,13 +523,13 @@ cornerLeft.CornerRadius = UDim.new(0, 8)
 leftButton.MouseEnter:Connect(function()
     leftButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
     leftButton.TextColor3 = Color3.fromRGB(230, 230, 230)
-    leftButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 end)
 
 leftButton.MouseLeave:Connect(function()
     leftButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
     leftButton.TextColor3 = Color3.fromRGB(200, 200, 200)
-    leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    leftButton.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 end)
 
 leftButton.MouseButton1Click:Connect(function()
@@ -669,4 +669,4 @@ end
 -- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: botones de la derecha pegados arriba a la derecha.")
+print("GUI actualizada: botones de la derecha más arriba, más a la derecha y más cuadrados (70x70).")
