@@ -4,7 +4,7 @@ local player = game.Players.LocalPlayer
 -- Leer valores guardados o usar valores por defecto
 local savedSpeed = player:GetAttribute("SpeedValue") or 30
 local savedCarry = player:GetAttribute("CarrySpeedValue") or 30
-local savedLagger = player:GetAttribute("LaggerModeValue") or 10.1  -- Nuevo
+local savedLagger = player:GetAttribute("LaggerModeValue") or 10.1
 
 -- ===== Configuración de la GUI =====
 local ScreenGui = Instance.new("ScreenGui")
@@ -104,7 +104,7 @@ local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 450, 0, 280) -- Un poco más alto para el nuevo elemento
+PanelFrame.Size = UDim2.new(0, 450, 0, 280)
 PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -140)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
@@ -169,12 +169,12 @@ local stealCorner = Instance.new("UICorner")
 stealCorner.Parent = StealButton
 stealCorner.CornerRadius = UDim.new(0, 5)
 
--- ===== CONTENEDOR DERECHO (más alto para los 3 elementos) =====
+-- ===== CONTENEDOR DERECHO =====
 local RightContainer = Instance.new("Frame")
 RightContainer.Parent = PanelFrame
 RightContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 RightContainer.BackgroundTransparency = 1
-RightContainer.Size = UDim2.new(0, 200, 0, 150) -- Aumentado para 3 filas
+RightContainer.Size = UDim2.new(0, 200, 0, 150)
 RightContainer.Position = UDim2.new(0.5, -60, 0, 70)
 
 -- ===== CONTENIDO DE MAIN =====
@@ -182,10 +182,10 @@ local MainContent = Instance.new("Frame")
 MainContent.Parent = RightContainer
 MainContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainContent.BackgroundTransparency = 1
-MainContent.Size = UDim2.new(0, 200, 0, 150) -- Aumentado para 3 filas
+MainContent.Size = UDim2.new(0, 200, 0, 150)
 MainContent.Position = UDim2.new(0, 0, 0, 0)
 
--- 1. Speed
+-- 1. Normal Speed (cambié el texto de "Speed" a "Normal Speed")
 local SpeedContainer = Instance.new("Frame")
 SpeedContainer.Parent = MainContent
 SpeedContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -197,9 +197,9 @@ local SpeedLabel = Instance.new("TextLabel")
 SpeedLabel.Parent = SpeedContainer
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Size = UDim2.new(0, 60, 0, 35)
+SpeedLabel.Size = UDim2.new(0, 110, 0, 35)  -- Más ancho para que quepa "Normal Speed"
 SpeedLabel.Position = UDim2.new(0, 0, 0, 0)
-SpeedLabel.Text = "Speed"
+SpeedLabel.Text = "Normal Speed"
 SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedLabel.TextSize = 16
 SpeedLabel.Font = Enum.Font.SourceSansBold
@@ -209,7 +209,7 @@ local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = SpeedContainer
 SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SpeedInput.Size = UDim2.new(0, 80, 0, 30)
-SpeedInput.Position = UDim2.new(0, 70, 0, 2)
+SpeedInput.Position = UDim2.new(0, 115, 0, 2)  -- Ajustado para que no se solape
 SpeedInput.Text = tostring(savedSpeed)
 SpeedInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedInput.TextSize = 16
@@ -231,7 +231,7 @@ SpeedInput.FocusLost:Connect(function()
         elseif value > 60 then value = 60 end
         SpeedInput.Text = tostring(value)
         player:SetAttribute("SpeedValue", value)
-        print("Speed ajustado a: " .. value)
+        print("Normal Speed ajustado a: " .. value)
     else
         SpeedInput.Text = tostring(savedSpeed)
     end
@@ -289,13 +289,13 @@ CarryInput.FocusLost:Connect(function()
     end
 end)
 
--- 3. LAGGER MODE (NUEVO)
+-- 3. Lagger Mode
 local LaggerContainer = Instance.new("Frame")
 LaggerContainer.Parent = MainContent
 LaggerContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 LaggerContainer.BackgroundTransparency = 1
 LaggerContainer.Size = UDim2.new(0, 200, 0, 35)
-LaggerContainer.Position = UDim2.new(0, 0, 0, 90) -- Debajo de Carry
+LaggerContainer.Position = UDim2.new(0, 0, 0, 90)
 
 local LaggerLabel = Instance.new("TextLabel")
 LaggerLabel.Parent = LaggerContainer
@@ -313,7 +313,7 @@ local LaggerInput = Instance.new("TextBox")
 LaggerInput.Parent = LaggerContainer
 LaggerInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 LaggerInput.Size = UDim2.new(0, 80, 0, 30)
-LaggerInput.Position = UDim2.new(0, 115, 0, 2) -- Ajustado para que no se solape
+LaggerInput.Position = UDim2.new(0, 115, 0, 2)
 LaggerInput.Text = tostring(savedLagger)
 LaggerInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 LaggerInput.TextSize = 16
@@ -588,4 +588,4 @@ end)
 -- Inicialización
 updateContent()
 updateToggle()
-print("GUI con Lagger Mode añadido (valor inicial 10.1, rango 1-20).")
+print("GUI actualizada: 'Speed' ahora se llama 'Normal Speed'.")
