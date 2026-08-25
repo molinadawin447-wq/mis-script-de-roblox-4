@@ -7,12 +7,12 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- Marco principal (transparente) - Posicionado a la derecha y más arriba
+-- Marco principal (transparente) - Posicionado a la derecha y ajustado
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1 -- Totalmente transparente
 MainFrame.Size = UDim2.new(0, 200, 0, 350) -- Marco más alto para los botones
-MainFrame.Position = UDim2.new(1, -220, 0.3, -175) -- Movido más arriba (0.3 en lugar de 0.5)
+MainFrame.Position = UDim2.new(1, -190, 0.4, -175) -- Movido a la izquierda (-190) y más abajo (0.4)
 
 -- Plantilla de botón
 ButtonTemplate.Parent = MainFrame
@@ -28,7 +28,7 @@ local buttons = {}
 local buttonSize = UDim2.new(0, 75, 0, 50) -- Tamaño de botón
 local spacing = 12
 local startX = 15
-local startY = 10 -- Reducido el espacio superior
+local startY = 15 -- Aumentado para bajar los botones
 
 -- 5 filas y 2 columnas
 for row = 0, 4 do
@@ -47,19 +47,18 @@ for row = 0, 4 do
         btn.BorderSizePixel = 0
         btn.Text = ""
         
-        -- Efecto hover (opcional)
+        -- Efecto hover
         btn.MouseEnter:Connect(function()
-            btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45) -- Más claro al pasar el mouse
+            btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
         end)
         
         btn.MouseLeave:Connect(function()
-            btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Vuelve al color original
+            btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         end)
         
         -- Evento click
         btn.MouseButton1Click:Connect(function()
             print("Botón " .. (row * 2 + col + 1) .. " presionado!")
-            -- Aquí puedes agregar la funcionalidad que desees
         end)
         
         table.insert(buttons, btn)
@@ -70,7 +69,7 @@ end
 for _, btn in pairs(buttons) do
     local corner = Instance.new("UICorner")
     corner.Parent = btn
-    corner.CornerRadius = UDim.new(0, 10) -- Radio de 10 píxeles
+    corner.CornerRadius = UDim.new(0, 10)
 end
 
-print("GUI vertical a la derecha y más arriba creada correctamente!")
+print("GUI ajustada: más abajo y más a la izquierda!")
