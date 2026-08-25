@@ -89,13 +89,13 @@ for row = 0, 4 do
     end
 end
 
--- ===== PANEL EMERGENTE (Force.vs) - SIN CUADROS DE TEXTO =====
+-- ===== PANEL EMERGENTE (Force.vs) =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 400, 0, 200) -- Panel más pequeño
-PanelFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
+PanelFrame.Size = UDim2.new(0, 300, 0, 180) -- Panel más pequeño
+PanelFrame.Position = UDim2.new(0.5, -150, 0.5, -90)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -121,70 +121,36 @@ TitleLabel.TextScaled = false
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 300, 0, 2)
-LineFrame.Position = UDim2.new(0.5, -150, 0, 55)
+LineFrame.Size = UDim2.new(0, 250, 0, 2)
+LineFrame.Position = UDim2.new(0.5, -125, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== APARTADO "SPEED" =====
+-- ===== APARTADO "SPEED" (más pequeño) =====
 local SpeedLabel = Instance.new("TextLabel")
 SpeedLabel.Parent = PanelFrame
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Size = UDim2.new(0, 100, 0, 30)
-SpeedLabel.Position = UDim2.new(0.5, -180, 0, 75)
+SpeedLabel.Size = UDim2.new(0, 100, 0, 25)
+SpeedLabel.Position = UDim2.new(0.5, -50, 0, 75) -- Centrado
 SpeedLabel.Text = "Speed"
 SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-SpeedLabel.TextSize = 20
+SpeedLabel.TextSize = 16 -- Más pequeño
 SpeedLabel.Font = Enum.Font.SourceSansBold
-SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
+SpeedLabel.TextXAlignment = Enum.TextXAlignment.Center
 
--- ===== LÍNEA VERTICAL (separador) =====
-local VerticalLine = Instance.new("Frame")
-VerticalLine.Parent = PanelFrame
-VerticalLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-VerticalLine.Size = UDim2.new(0, 2, 0, 60)
-VerticalLine.Position = UDim2.new(0.5, -40, 0, 75)
-VerticalLine.BackgroundTransparency = 0
-VerticalLine.BorderSizePixel = 0
-
--- ===== APARTADO "VELOCITY" (lado derecho de la línea vertical) =====
-local VelocityLabel = Instance.new("TextLabel")
-VelocityLabel.Parent = PanelFrame
-VelocityLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-VelocityLabel.BackgroundTransparency = 1
-VelocityLabel.Size = UDim2.new(0, 100, 0, 30)
-VelocityLabel.Position = UDim2.new(0.5, 20, 0, 75)
-VelocityLabel.Text = "Velocity"
-VelocityLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-VelocityLabel.TextSize = 20
-VelocityLabel.Font = Enum.Font.SourceSansBold
-VelocityLabel.TextXAlignment = Enum.TextXAlignment.Left
-
--- ===== VALORES DE SPEED Y VELOCITY (solo texto) =====
-local SpeedValue = Instance.new("TextLabel")
-SpeedValue.Parent = PanelFrame
-SpeedValue.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-SpeedValue.BackgroundTransparency = 1
-SpeedValue.Size = UDim2.new(0, 80, 0, 30)
-SpeedValue.Position = UDim2.new(0.5, -170, 0, 110)
-SpeedValue.Text = "50"
-SpeedValue.TextColor3 = Color3.fromRGB(200, 200, 200)
-SpeedValue.TextSize = 18
-SpeedValue.Font = Enum.Font.SourceSansBold
-SpeedValue.TextXAlignment = Enum.TextXAlignment.Left
-
-local VelocityValue = Instance.new("TextLabel")
-VelocityValue.Parent = PanelFrame
-VelocityValue.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-VelocityValue.BackgroundTransparency = 1
-VelocityValue.Size = UDim2.new(0, 80, 0, 30)
-VelocityValue.Position = UDim2.new(0.5, 30, 0, 110)
-VelocityValue.Text = "100"
-VelocityValue.TextColor3 = Color3.fromRGB(200, 200, 200)
-VelocityValue.TextSize = 18
-VelocityValue.Font = Enum.Font.SourceSansBold
-VelocityValue.TextXAlignment = Enum.TextXAlignment.Left
+-- ===== APARTADO "COMBAT" (debajo de Speed) =====
+local CombatLabel = Instance.new("TextLabel")
+CombatLabel.Parent = PanelFrame
+CombatLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CombatLabel.BackgroundTransparency = 1
+CombatLabel.Size = UDim2.new(0, 100, 0, 25)
+CombatLabel.Position = UDim2.new(0.5, -50, 0, 105) -- Debajo de Speed
+CombatLabel.Text = "Combat"
+CombatLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+CombatLabel.TextSize = 16
+CombatLabel.Font = Enum.Font.SourceSansBold
+CombatLabel.TextXAlignment = Enum.TextXAlignment.Center
 
 -- ===== BOTÓN DE CERRAR (X) =====
 local CloseButton = Instance.new("TextButton")
@@ -319,4 +285,4 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-print("GUI con panel Force.vs sin cuadros de texto y sin botón confirmar creada correctamente!")
+print("GUI con panel Force.vs con Speed pequeño y Combat debajo creada correctamente!")
