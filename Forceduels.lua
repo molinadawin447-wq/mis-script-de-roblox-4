@@ -15,12 +15,12 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- ===== MARCO DERECHO (botones principales) - PEGADO ARRIBA A LA DERECHA =====
+-- ===== MARCO DERECHO (botones principales) - MÁS ANCHO PARA 4 COLUMNAS EN PRIMERA FILA =====
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 180, 0, 380) -- Marco más alto para botones cuadrados
-MainFrame.Position = UDim2.new(1, -180, 0, 0) -- Pegado a la derecha y arriba
+MainFrame.Size = UDim2.new(0, 320, 0, 340) -- Ancho 320 para 4 botones, alto 340
+MainFrame.Position = UDim2.new(1, -320, 0, 0) -- Pegado a la derecha y arriba
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -29,7 +29,7 @@ MainFrameLeft.BackgroundTransparency = 1
 MainFrameLeft.Size = UDim2.new(0, 120, 0, 60)
 MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 
--- Plantilla de botón para los botones de la derecha (cuadrados, pequeños, con bordes redondeados)
+-- Plantilla de botón para los botones de la derecha (cuadrados 70x70)
 local RightButtonTemplate = Instance.new("TextButton")
 RightButtonTemplate.Parent = MainFrame
 RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
@@ -43,7 +43,7 @@ RightButtonTemplate.TextScaled = false
 RightButtonTemplate.TextXAlignment = Enum.TextXAlignment.Center
 RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
 
--- Plantilla de botón para el botón izquierdo (Force.vs)
+-- Plantilla para el botón izquierdo
 ButtonTemplate.Parent = MainFrameLeft
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -53,40 +53,48 @@ ButtonTemplate.Font = Enum.Font.SourceSansBold
 ButtonTemplate.TextSize = 12
 ButtonTemplate.TextWrapped = false
 
--- ===== DATOS DE LOS BOTONES (DERECHA) con dos líneas =====
-local buttonsData = {
-    {"DROP", "BRAINROT"},
-    {"AUTO", "LEFT"},
-    {"AUTO", "BAT"},
-    {"AUTO", "RIGHT"},
-    {"TP", "DOWN"},
-    {"CARRY", "SPEED"},
-    {"LAGGER", "MODE"},
-    {"INSTA", "RESET"},
-    {"LAGGER", "CARRY"},
-    {"BAT", "TP"}
+-- ===== DATOS DE LOS BOTONES (DERECHA) =====
+-- Nueva disposición: fila 1 tiene 4 botones, filas 2-4 tienen 2 botones
+local rowData = {
+    { -- Fila 1 (4 botones)
+        {"DROP", "BRAINROT"},
+        {"AUTO", "LEFT"},
+        {"LAGGER", "CARRY"},
+        {"BAT", "TP"}
+    },
+    { -- Fila 2 (2 botones)
+        {"AUTO", "BAT"},
+        {"AUTO", "RIGHT"}
+    },
+    { -- Fila 3 (2 botones)
+        {"TP", "DOWN"},
+        {"CARRY", "SPEED"}
+    },
+    { -- Fila 4 (2 botones)
+        {"LAGGER", "MODE"},
+        {"INSTA", "RESET"}
+    }
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 70, 0, 70) -- Botones cuadrados (70x70)
+local buttonSize = UDim2.new(0, 70, 0, 70)
 local spacingX = 6
 local spacingY = 6
 local startX = 8
-local startY = 8
+local startY = 5 -- Más arriba (antes 8)
 
 -- Crear botones en el marco derecho
-for row = 0, 4 do
-    for col = 0, 1 do
+for rowIndex, row in ipairs(rowData) do
+    local numCols = #row
+    for colIndex, data in ipairs(row) do
         local btn = RightButtonTemplate:Clone()
         btn.Parent = MainFrame
         
-        local xPos = startX + (col * (buttonSize.X.Offset + spacingX))
-        local yPos = startY + (row * (buttonSize.Y.Offset + spacingY))
+        local xPos = startX + ((colIndex - 1) * (buttonSize.X.Offset + spacingX))
+        local yPos = startY + ((rowIndex - 1) * (buttonSize.Y.Offset + spacingY))
         btn.Position = UDim2.new(0, xPos, 0, yPos)
         btn.Size = buttonSize
         
-        local index = row * 2 + col + 1
-        local data = buttonsData[index]
         btn.Text = data[1] .. "\n" .. data[2]
         
         -- Esquinas redondeadas
@@ -669,4 +677,4 @@ end
 -- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: botones de la derecha más arriba, más a la derecha y más cuadrados (70x70).")
+print("GUI actualizada: primeros 4 botones en fila superior, botones más arriba.")
