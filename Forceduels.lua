@@ -89,13 +89,17 @@ for row = 0, 4 do
     end
 end
 
+-- ===== VARIABLES DE ESTADO =====
+local selectedMode = "Main" -- "Main" o "Steal"
+local autoRoboState = false -- false = Off, true = On
+
 -- ===== PANEL EMERGENTE (Force.vs) =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 450, 0, 220)
-PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -110)
+PanelFrame.Size = UDim2.new(0, 420, 0, 220)
+PanelFrame.Position = UDim2.new(0.5, -210, 0.5, -110)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -121,20 +125,68 @@ TitleLabel.TextScaled = false
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 400, 0, 2)
-LineFrame.Position = UDim2.new(0.5, -200, 0, 55)
+LineFrame.Size = UDim2.new(0, 370, 0, 2)
+LineFrame.Position = UDim2.new(0.5, -185, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== APARTADO "SPEED" (lado izquierdo - con cuadro de texto al lado) =====
+-- ===== BOTONES MAIN Y STEAL (lado izquierdo) =====
+local MainButton = Instance.new("TextButton")
+MainButton.Parent = PanelFrame
+MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainButton.Size = UDim2.new(0, 80, 0, 35)
+MainButton.Position = UDim2.new(0.5, -190, 0, 75)
+MainButton.Text = "Main"
+MainButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+MainButton.TextSize = 16
+MainButton.Font = Enum.Font.SourceSansBold
+MainButton.BorderSizePixel = 2
+MainButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.Parent = MainButton
+mainCorner.CornerRadius = UDim.new(0, 5)
+
+local StealButton = Instance.new("TextButton")
+StealButton.Parent = PanelFrame
+StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+StealButton.Size = UDim2.new(0, 80, 0, 35)
+StealButton.Position = UDim2.new(0.5, -190, 0, 125)
+StealButton.Text = "Steal"
+StealButton.TextColor3 = Color3.fromRGB(200, 200, 200)
+StealButton.TextSize = 16
+StealButton.Font = Enum.Font.SourceSansBold
+StealButton.BorderSizePixel = 2
+StealButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
+
+local stealCorner = Instance.new("UICorner")
+stealCorner.Parent = StealButton
+stealCorner.CornerRadius = UDim.new(0, 5)
+
+-- ===== CONTENEDOR DINÁMICO (lado derecho) =====
+local RightContainer = Instance.new("Frame")
+RightContainer.Parent = PanelFrame
+RightContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+RightContainer.BackgroundTransparency = 1
+RightContainer.Size = UDim2.new(0, 200, 0, 100)
+RightContainer.Position = UDim2.new(0.5, -60, 0, 70)
+
+-- ===== CONTENIDO DE MAIN =====
+local MainContent = Instance.new("Frame")
+MainContent.Parent = RightContainer
+MainContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainContent.BackgroundTransparency = 1
+MainContent.Size = UDim2.new(0, 200, 0, 100)
+MainContent.Position = UDim2.new(0, 0, 0, 0)
+
+-- Speed
 local SpeedContainer = Instance.new("Frame")
-SpeedContainer.Parent = PanelFrame
+SpeedContainer.Parent = MainContent
 SpeedContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SpeedContainer.BackgroundTransparency = 1
-SpeedContainer.Size = UDim2.new(0, 200, 0, 40)
-SpeedContainer.Position = UDim2.new(0.5, -180, 0, 80)
+SpeedContainer.Size = UDim2.new(0, 200, 0, 35)
+SpeedContainer.Position = UDim2.new(0, 0, 0, 0)
 
--- Etiqueta "Speed"
 local SpeedLabel = Instance.new("TextLabel")
 SpeedLabel.Parent = SpeedContainer
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -147,13 +199,12 @@ SpeedLabel.TextSize = 16
 SpeedLabel.Font = Enum.Font.SourceSansBold
 SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Cuadro de texto para modificar velocidad (al lado de Speed)
 local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = SpeedContainer
 SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-SpeedInput.Size = UDim2.new(0, 80, 0, 35)
-SpeedInput.Position = UDim2.new(0, 70, 0, 0)
-SpeedInput.Text = "1"
+SpeedInput.Size = UDim2.new(0, 80, 0, 30)
+SpeedInput.Position = UDim2.new(0, 70, 0, 2)
+SpeedInput.Text = "30"
 SpeedInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedInput.TextSize = 16
 SpeedInput.Font = Enum.Font.SourceSansBold
@@ -167,7 +218,6 @@ local inputCorner = Instance.new("UICorner")
 inputCorner.Parent = SpeedInput
 inputCorner.CornerRadius = UDim.new(0, 5)
 
--- Función para validar entrada de velocidad
 SpeedInput.FocusLost:Connect(function()
     local value = tonumber(SpeedInput.Text)
     if value then
@@ -178,43 +228,184 @@ SpeedInput.FocusLost:Connect(function()
         end
         print("Velocidad ajustada a: " .. SpeedInput.Text)
     else
-        SpeedInput.Text = "1"
+        SpeedInput.Text = "30"
     end
 end)
 
--- ===== APARTADO "COMBAT" (lado izquierdo, debajo de Speed) =====
-local CombatContainer = Instance.new("Frame")
-CombatContainer.Parent = PanelFrame
-CombatContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-CombatContainer.BackgroundTransparency = 1
-CombatContainer.Size = UDim2.new(0, 200, 0, 40)
-CombatContainer.Position = UDim2.new(0.5, -180, 0, 130)
+-- Carry Speed
+local CarryContainer = Instance.new("Frame")
+CarryContainer.Parent = MainContent
+CarryContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CarryContainer.BackgroundTransparency = 1
+CarryContainer.Size = UDim2.new(0, 200, 0, 35)
+CarryContainer.Position = UDim2.new(0, 0, 0, 45)
 
--- Etiqueta "Combat"
-local CombatLabel = Instance.new("TextLabel")
-CombatLabel.Parent = CombatContainer
-CombatLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-CombatLabel.BackgroundTransparency = 1
-CombatLabel.Size = UDim2.new(0, 80, 0, 35)
-CombatLabel.Position = UDim2.new(0, 0, 0, 0)
-CombatLabel.Text = "Combat"
-CombatLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-CombatLabel.TextSize = 16
-CombatLabel.Font = Enum.Font.SourceSansBold
-CombatLabel.TextXAlignment = Enum.TextXAlignment.Left
+local CarryLabel = Instance.new("TextLabel")
+CarryLabel.Parent = CarryContainer
+CarryLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CarryLabel.BackgroundTransparency = 1
+CarryLabel.Size = UDim2.new(0, 100, 0, 35)
+CarryLabel.Position = UDim2.new(0, 0, 0, 0)
+CarryLabel.Text = "Carry Speed"
+CarryLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+CarryLabel.TextSize = 16
+CarryLabel.Font = Enum.Font.SourceSansBold
+CarryLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Texto "Modo Combat" al lado de Combat
-local CombatInfo = Instance.new("TextLabel")
-CombatInfo.Parent = CombatContainer
-CombatInfo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-CombatInfo.BackgroundTransparency = 1
-CombatInfo.Size = UDim2.new(0, 100, 0, 35)
-CombatInfo.Position = UDim2.new(0, 85, 0, 0)
-CombatInfo.Text = "Modo Combat"
-CombatInfo.TextColor3 = Color3.fromRGB(200, 200, 200)
-CombatInfo.TextSize = 14
-CombatInfo.Font = Enum.Font.SourceSans
-CombatInfo.TextXAlignment = Enum.TextXAlignment.Left
+local CarryInput = Instance.new("TextBox")
+CarryInput.Parent = CarryContainer
+CarryInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+CarryInput.Size = UDim2.new(0, 80, 0, 30)
+CarryInput.Position = UDim2.new(0, 110, 0, 2)
+CarryInput.Text = "30"
+CarryInput.TextColor3 = Color3.fromRGB(200, 200, 200)
+CarryInput.TextSize = 16
+CarryInput.Font = Enum.Font.SourceSansBold
+CarryInput.BorderSizePixel = 2
+CarryInput.BorderColor3 = Color3.fromRGB(200, 200, 200)
+CarryInput.PlaceholderText = "1-60"
+CarryInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+CarryInput.ClearTextOnFocus = false
+
+local carryInputCorner = Instance.new("UICorner")
+carryInputCorner.Parent = CarryInput
+carryInputCorner.CornerRadius = UDim.new(0, 5)
+
+CarryInput.FocusLost:Connect(function()
+    local value = tonumber(CarryInput.Text)
+    if value then
+        if value < 1 then
+            CarryInput.Text = "1"
+        elseif value > 60 then
+            CarryInput.Text = "60"
+        end
+        print("Carry Speed ajustado a: " .. CarryInput.Text)
+    else
+        CarryInput.Text = "30"
+    end
+end)
+
+-- ===== CONTENIDO DE STEAL =====
+local StealContent = Instance.new("Frame")
+StealContent.Parent = RightContainer
+StealContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StealContent.BackgroundTransparency = 1
+StealContent.Size = UDim2.new(0, 200, 0, 60)
+StealContent.Position = UDim2.new(0, 0, 0, 0)
+StealContent.Visible = false -- Inicialmente oculto
+
+-- Etiqueta "Robo Automático"
+local RoboLabel = Instance.new("TextLabel")
+RoboLabel.Parent = StealContent
+RoboLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+RoboLabel.BackgroundTransparency = 1
+RoboLabel.Size = UDim2.new(0, 140, 0, 35)
+RoboLabel.Position = UDim2.new(0, 0, 0, 0)
+RoboLabel.Text = "Robo Automático"
+RoboLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+RoboLabel.TextSize = 16
+RoboLabel.Font = Enum.Font.SourceSansBold
+RoboLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Botón Toggle Off/On
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = StealContent
+ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleButton.Size = UDim2.new(0, 60, 0, 30)
+ToggleButton.Position = UDim2.new(0, 150, 0, 2)
+ToggleButton.Text = "Off"
+ToggleButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+ToggleButton.TextSize = 14
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.BorderSizePixel = 2
+ToggleButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.Parent = ToggleButton
+toggleCorner.CornerRadius = UDim.new(0, 5)
+
+-- Función para actualizar el estado del toggle
+local function updateToggle()
+    if autoRoboState then
+        ToggleButton.Text = "On"
+        ToggleButton.TextColor3 = Color3.fromRGB(100, 255, 100)
+        print("Robo Automático: ON")
+    else
+        ToggleButton.Text = "Off"
+        ToggleButton.TextColor3 = Color3.fromRGB(255, 100, 100)
+        print("Robo Automático: OFF")
+    end
+end
+
+-- Evento del toggle
+ToggleButton.MouseButton1Click:Connect(function()
+    autoRoboState = not autoRoboState
+    updateToggle()
+end)
+
+-- Efecto hover
+ToggleButton.MouseEnter:Connect(function()
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+end)
+
+ToggleButton.MouseLeave:Connect(function()
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+end)
+
+-- ===== FUNCIÓN PARA ACTUALIZAR LA VISIBILIDAD =====
+local function updateContent()
+    if selectedMode == "Main" then
+        MainContent.Visible = true
+        StealContent.Visible = false
+        MainButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        MainButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
+        StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        StealButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
+    else
+        MainContent.Visible = false
+        StealContent.Visible = true
+        StealButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        StealButton.BorderColor3 = Color3.fromRGB(200, 200, 200)
+        MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        MainButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
+    end
+end
+
+-- ===== EVENTOS DE LOS BOTONES MAIN Y STEAL =====
+MainButton.MouseButton1Click:Connect(function()
+    selectedMode = "Main"
+    updateContent()
+end)
+
+StealButton.MouseButton1Click:Connect(function()
+    selectedMode = "Steal"
+    updateContent()
+end)
+
+-- Efectos hover
+MainButton.MouseEnter:Connect(function()
+    if selectedMode ~= "Main" then
+        MainButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    end
+end)
+
+MainButton.MouseLeave:Connect(function()
+    if selectedMode ~= "Main" then
+        MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    end
+end)
+
+StealButton.MouseEnter:Connect(function()
+    if selectedMode ~= "Steal" then
+        StealButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    end
+end)
+
+StealButton.MouseLeave:Connect(function()
+    if selectedMode ~= "Steal" then
+        StealButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    end
+end)
 
 -- ===== BOTÓN DE CERRAR (X) =====
 local CloseButton = Instance.new("TextButton")
@@ -276,9 +467,11 @@ leftButton.MouseLeave:Connect(function()
     leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 end)
 
--- ABRIR PANEL PRINCIPAL AL TOCAR EL BOTÓN IZQUIERDO
+-- ABRIR PANEL PRINCIPAL
 leftButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = true
+    updateContent()
+    updateToggle()
 end)
 
 -- ===== SISTEMA DE ARRASTRE PARA EL BOTÓN IZQUIERDO =====
@@ -349,4 +542,7 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-print("GUI con Speed y cuadro de texto al lado, sin línea vertical creada correctamente!")
+-- Inicialización
+updateContent()
+updateToggle()
+print("GUI con Main/Steal y toggle de Robo Automático creada correctamente!")
