@@ -10,16 +10,16 @@ local savedLagger = player:GetAttribute("LaggerModeValue") or 10.1
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local MainFrameLeft = Instance.new("Frame")
-local ButtonTemplate = Instance.new("TextButton")  -- Plantilla para botón izquierdo (Force.vs) y posiblemente para los derechos? Mejor crear una plantilla separada para los derechos.
+local ButtonTemplate = Instance.new("TextButton")  -- Plantilla para botón izquierdo (Force.vs)
 
 ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- ===== MARCO DERECHO (botones principales) =====
+-- ===== MARCO DERECHO (botones principales) - más alto para botones cuadrados =====
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 220, 0, 350) -- Aumentado un poco para los botones más altos
+MainFrame.Size = UDim2.new(0, 220, 0, 350)
 MainFrame.Position = UDim2.new(1, -220, 0.35, -175)
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
@@ -29,13 +29,13 @@ MainFrameLeft.BackgroundTransparency = 1
 MainFrameLeft.Size = UDim2.new(0, 120, 0, 60)
 MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 
--- Plantilla de botón para los botones de la derecha (nueva)
+-- Plantilla de botón para los botones de la derecha (más cuadrados)
 local RightButtonTemplate = Instance.new("TextButton")
 RightButtonTemplate.Parent = MainFrame
 RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 RightButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
-RightButtonTemplate.BorderSizePixel = 3  -- Borde más grueso
-RightButtonTemplate.BorderColor3 = Color3.fromRGB(255, 255, 255) -- Borde blanco
+RightButtonTemplate.BorderSizePixel = 3
+RightButtonTemplate.BorderColor3 = Color3.fromRGB(255, 255, 255)
 RightButtonTemplate.Font = Enum.Font.SourceSansBold
 RightButtonTemplate.TextSize = 11
 RightButtonTemplate.TextWrapped = true
@@ -43,7 +43,7 @@ RightButtonTemplate.TextScaled = false
 RightButtonTemplate.TextXAlignment = Enum.TextXAlignment.Center
 RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
 
--- Plantilla de botón para el botón izquierdo (Force.vs) - mantiene estilo anterior
+-- Plantilla de botón para el botón izquierdo (Force.vs)
 ButtonTemplate.Parent = MainFrameLeft
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -68,9 +68,9 @@ local buttonsData = {
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 85, 0, 55)  -- Más cuadrado que antes
-local spacingX = 8
-local spacingY = 8
+local buttonSize = UDim2.new(0, 80, 0, 60)
+local spacingX = 6
+local spacingY = 6
 local startX = 10
 local startY = 10
 
@@ -87,12 +87,10 @@ for row = 0, 4 do
         
         local index = row * 2 + col + 1
         local data = buttonsData[index]
-        btn.Text = data[1] .. "\n" .. data[2]  -- Dos líneas
+        btn.Text = data[1] .. "\n" .. data[2]
         
-        -- Estilo de borde blanco ya aplicado en la plantilla
-        -- Efecto hover: borde más brillante y fondo ligeramente más claro
         btn.MouseEnter:Connect(function()
-            btn.BorderColor3 = Color3.fromRGB(255, 255, 255)  -- Se mantiene blanco
+            btn.BorderColor3 = Color3.fromRGB(255, 255, 255)
             btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         end)
         
@@ -105,7 +103,6 @@ for row = 0, 4 do
             print("Botón " .. data[1] .. " " .. data[2] .. " presionado!")
         end)
         
-        -- Esquinas redondeadas (ya se aplican en cada botón)
         local corner = Instance.new("UICorner")
         corner.Parent = btn
         corner.CornerRadius = UDim.new(0, 8)
@@ -155,13 +152,13 @@ LineFrame.Position = UDim2.new(0.5, -200, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== BOTONES MAIN Y STEAL =====
+-- ===== BOTONES SPEED Y STEAL =====
 local MainButton = Instance.new("TextButton")
 MainButton.Parent = PanelFrame
 MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MainButton.Size = UDim2.new(0, 80, 0, 35)
 MainButton.Position = UDim2.new(0.5, -190, 0, 75)
-MainButton.Text = "Main"
+MainButton.Text = "Speed"
 MainButton.TextColor3 = Color3.fromRGB(200, 200, 200)
 MainButton.TextSize = 16
 MainButton.Font = Enum.Font.SourceSansBold
@@ -196,7 +193,7 @@ RightContainer.BackgroundTransparency = 1
 RightContainer.Size = UDim2.new(0, 200, 0, 150)
 RightContainer.Position = UDim2.new(0.5, -60, 0, 70)
 
--- ===== CONTENIDO DE MAIN =====
+-- ===== CONTENIDO DE SPEED (antes Main) =====
 local MainContent = Instance.new("Frame")
 MainContent.Parent = RightContainer
 MainContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -604,7 +601,93 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
--- Inicialización
+-- ============================================================
+-- ===== NUEVA FUNCIONALIDAD: INDICADOR DE VELOCIDAD SOBRE EL PERSONAJE =====
+-- ============================================================
+
+local function createSpeedIndicator()
+    local character = player.Character
+    if not character then
+        character = player.CharacterAdded:Wait()
+    end
+    
+    -- Esperar a que la cabeza exista
+    local head = character:WaitForChild("Head")
+    
+    -- Crear BillboardGui
+    local billboard = Instance.new("BillboardGui")
+    billboard.Parent = head
+    billboard.Size = UDim2.new(0, 100, 0, 40)
+    billboard.Adornee = head
+    billboard.StudsOffset = Vector3.new(0, 2.5, 0)  -- Por encima de la cabeza
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = 100
+    billboard.Enabled = true
+    
+    -- Crear un marco de fondo (opcional pero mejora la legibilidad)
+    local background = Instance.new("Frame")
+    background.Parent = billboard
+    background.Size = UDim2.new(1, 0, 1, 0)
+    background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    background.BackgroundTransparency = 0.5
+    background.BorderSizePixel = 1
+    background.BorderColor3 = Color3.fromRGB(255, 255, 255)
+    
+    local bgCorner = Instance.new("UICorner")
+    bgCorner.Parent = background
+    bgCorner.CornerRadius = UDim.new(0, 8)
+    
+    -- Texto que mostrará la velocidad
+    local speedLabel = Instance.new("TextLabel")
+    speedLabel.Parent = background
+    speedLabel.Size = UDim2.new(1, 0, 1, 0)
+    speedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    speedLabel.BackgroundTransparency = 1
+    speedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    speedLabel.TextSize = 20
+    speedLabel.Font = Enum.Font.SourceSansBold
+    speedLabel.Text = "0.0"
+    speedLabel.TextScaled = true
+    speedLabel.TextWrapped = true
+    speedLabel.TextXAlignment = Enum.TextXAlignment.Center
+    speedLabel.TextYAlignment = Enum.TextYAlignment.Center
+    
+    -- Obtener el Humanoid
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    -- Variable para controlar si está en movimiento
+    local isMoving = false
+    
+    -- Evento Running: se dispara cuando la velocidad cambia (incluye 0)
+    humanoid.Running:Connect(function(speed)
+        if speed > 0.1 then
+            isMoving = true
+            -- Leer el atributo de velocidad normal (si no existe, usar 30 por defecto)
+            local speedValue = player:GetAttribute("SpeedValue") or 30
+            speedLabel.Text = string.format("%.1f", speedValue)  -- Muestra con un decimal
+        else
+            isMoving = false
+            speedLabel.Text = "0.0"
+        end
+    end)
+    
+    -- También actualizar cuando se modifique el atributo (por si cambia mientras se mueve)
+    player:GetAttributeChangedSignal("SpeedValue"):Connect(function()
+        if isMoving then
+            local speedValue = player:GetAttribute("SpeedValue") or 30
+            speedLabel.Text = string.format("%.1f", speedValue)
+        end
+    end)
+end
+
+-- Ejecutar cuando el personaje esté listo
+if player.Character then
+    createSpeedIndicator()
+else
+    player.CharacterAdded:Connect(createSpeedIndicator)
+end
+
+-- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: botones de la derecha más cuadrados, texto en dos líneas, bordes blancos gruesos.")
+print("GUI completa con indicador de velocidad sobre el personaje.")
