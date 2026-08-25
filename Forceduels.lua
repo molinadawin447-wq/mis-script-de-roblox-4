@@ -27,7 +27,7 @@ ButtonTemplate.Parent = MainFrame
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
 ButtonTemplate.BorderSizePixel = 2
-ButtonTemplate.BorderColor3 = Color3.fromRGB(160, 160, 160) -- Borde gris como estaba antes
+ButtonTemplate.BorderColor3 = Color3.fromRGB(160, 160, 160)
 ButtonTemplate.Font = Enum.Font.SourceSansBold
 ButtonTemplate.TextSize = 10
 ButtonTemplate.TextWrapped = true
@@ -48,7 +48,7 @@ local spacing = 10
 local startX = 10
 local startY = 10
 
--- Crear botones en el marco derecho (exactamente como estaban antes)
+-- Crear botones en el marco derecho
 for row = 0, 4 do
     for col = 0, 1 do
         local btn = ButtonTemplate:Clone()
@@ -62,7 +62,6 @@ for row = 0, 4 do
         local index = row * 2 + col + 1
         btn.Text = buttonsData[index] or "BTN " .. index
         
-        -- Estilo original (borde gris 160)
         btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         btn.BorderSizePixel = 2
         btn.BorderColor3 = Color3.fromRGB(160, 160, 160)
@@ -72,7 +71,6 @@ for row = 0, 4 do
         corner.Parent = btn
         corner.CornerRadius = UDim.new(0, 8)
         
-        -- Efecto hover original
         btn.MouseEnter:Connect(function()
             btn.BorderColor3 = Color3.fromRGB(200, 200, 200)
             btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
@@ -96,8 +94,8 @@ local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 350, 0, 200)
-PanelFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+PanelFrame.Size = UDim2.new(0, 400, 0, 280) -- Panel más grande para el nuevo apartado
+PanelFrame.Position = UDim2.new(0.5, -200, 0.5, -140)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -106,7 +104,7 @@ local panelCorner = Instance.new("UICorner")
 panelCorner.Parent = PanelFrame
 panelCorner.CornerRadius = UDim.new(0, 10)
 
--- Título del panel
+-- ===== TÍTULO DEL PANEL "Force.vs" =====
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = PanelFrame
 TitleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -119,36 +117,91 @@ TitleLabel.TextSize = 28
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.TextScaled = false
 
--- Línea debajo del título
+-- ===== LÍNEA DEBAJO DEL TÍTULO =====
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 250, 0, 2)
-LineFrame.Position = UDim2.new(0.5, -125, 0, 55)
+LineFrame.Size = UDim2.new(0, 300, 0, 2)
+LineFrame.Position = UDim2.new(0.5, -150, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- Cuadro de texto
-local TextBox = Instance.new("TextBox")
-TextBox.Parent = PanelFrame
-TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-TextBox.Size = UDim2.new(0, 250, 0, 35)
-TextBox.Position = UDim2.new(0.5, -125, 0, 70)
-TextBox.Text = ""
-TextBox.TextColor3 = Color3.fromRGB(200, 200, 200)
-TextBox.TextSize = 16
-TextBox.Font = Enum.Font.SourceSans
-TextBox.PlaceholderText = "Escribe aquí..."
-TextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
-TextBox.BorderSizePixel = 2
-TextBox.BorderColor3 = Color3.fromRGB(200, 200, 200)
-TextBox.ClearTextOnFocus = false
+-- ===== APARTADO "SPEED" =====
+local SpeedLabel = Instance.new("TextLabel")
+SpeedLabel.Parent = PanelFrame
+SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+SpeedLabel.BackgroundTransparency = 1
+SpeedLabel.Size = UDim2.new(0, 100, 0, 30)
+SpeedLabel.Position = UDim2.new(0.5, -180, 0, 75) -- Izquierda
+SpeedLabel.Text = "Speed"
+SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+SpeedLabel.TextSize = 20
+SpeedLabel.Font = Enum.Font.SourceSansBold
+SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-local textBoxCorner = Instance.new("UICorner")
-textBoxCorner.Parent = TextBox
-textBoxCorner.CornerRadius = UDim.new(0, 5)
+-- ===== LÍNEA VERTICAL (separador) =====
+local VerticalLine = Instance.new("Frame")
+VerticalLine.Parent = PanelFrame
+VerticalLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+VerticalLine.Size = UDim2.new(0, 2, 0, 100)
+VerticalLine.Position = UDim2.new(0.5, -40, 0, 75) -- Centro
+VerticalLine.BackgroundTransparency = 0
+VerticalLine.BorderSizePixel = 0
 
--- Botón de cerrar (X)
+-- ===== APARTADO "VELOCITY" (lado derecho de la línea vertical) =====
+local VelocityLabel = Instance.new("TextLabel")
+VelocityLabel.Parent = PanelFrame
+VelocityLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+VelocityLabel.BackgroundTransparency = 1
+VelocityLabel.Size = UDim2.new(0, 100, 0, 30)
+VelocityLabel.Position = UDim2.new(0.5, 20, 0, 75) -- Derecha
+VelocityLabel.Text = "Velocity"
+VelocityLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+VelocityLabel.TextSize = 20
+VelocityLabel.Font = Enum.Font.SourceSansBold
+VelocityLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- ===== CUADRO DE TEXTO (lado izquierdo - Speed) =====
+local SpeedTextBox = Instance.new("TextBox")
+SpeedTextBox.Parent = PanelFrame
+SpeedTextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SpeedTextBox.Size = UDim2.new(0, 100, 0, 30)
+SpeedTextBox.Position = UDim2.new(0.5, -170, 0, 110)
+SpeedTextBox.Text = ""
+SpeedTextBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+SpeedTextBox.TextSize = 14
+SpeedTextBox.Font = Enum.Font.SourceSans
+SpeedTextBox.PlaceholderText = "Speed..."
+SpeedTextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+SpeedTextBox.BorderSizePixel = 2
+SpeedTextBox.BorderColor3 = Color3.fromRGB(200, 200, 200)
+SpeedTextBox.ClearTextOnFocus = false
+
+local speedBoxCorner = Instance.new("UICorner")
+speedBoxCorner.Parent = SpeedTextBox
+speedBoxCorner.CornerRadius = UDim.new(0, 5)
+
+-- ===== CUADRO DE TEXTO (lado derecho - Velocity) =====
+local VelocityTextBox = Instance.new("TextBox")
+VelocityTextBox.Parent = PanelFrame
+VelocityTextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+VelocityTextBox.Size = UDim2.new(0, 100, 0, 30)
+VelocityTextBox.Position = UDim2.new(0.5, 30, 0, 110) -- Derecha
+VelocityTextBox.Text = ""
+VelocityTextBox.TextColor3 = Color3.fromRGB(200, 200, 200)
+VelocityTextBox.TextSize = 14
+VelocityTextBox.Font = Enum.Font.SourceSans
+VelocityTextBox.PlaceholderText = "Velocity..."
+VelocityTextBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+VelocityTextBox.BorderSizePixel = 2
+VelocityTextBox.BorderColor3 = Color3.fromRGB(200, 200, 200)
+VelocityTextBox.ClearTextOnFocus = false
+
+local velocityBoxCorner = Instance.new("UICorner")
+velocityBoxCorner.Parent = VelocityTextBox
+velocityBoxCorner.CornerRadius = UDim.new(0, 5)
+
+-- ===== BOTÓN DE CERRAR (X) =====
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = PanelFrame
 CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -180,12 +233,12 @@ CloseButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = false
 end)
 
--- Botón de confirmar
+-- ===== BOTÓN DE CONFIRMAR =====
 local ConfirmButton = Instance.new("TextButton")
 ConfirmButton.Parent = PanelFrame
 ConfirmButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-ConfirmButton.Size = UDim2.new(0, 100, 0, 35)
-ConfirmButton.Position = UDim2.new(0.5, -50, 0, 130)
+ConfirmButton.Size = UDim2.new(0, 120, 0, 35)
+ConfirmButton.Position = UDim2.new(0.5, -60, 0, 170)
 ConfirmButton.Text = "Confirmar"
 ConfirmButton.TextColor3 = Color3.fromRGB(200, 200, 200)
 ConfirmButton.TextSize = 14
@@ -206,11 +259,12 @@ ConfirmButton.MouseLeave:Connect(function()
 end)
 
 ConfirmButton.MouseButton1Click:Connect(function()
-    print("Texto ingresado: " .. TextBox.Text)
+    print("Speed: " .. SpeedTextBox.Text)
+    print("Velocity: " .. VelocityTextBox.Text)
     PanelFrame.Visible = false
 end)
 
--- ===== BOTÓN IZQUIERDO "Force.vs" (movible y con panel) =====
+-- ===== BOTÓN IZQUIERDO "Force.vs" =====
 local leftButton = ButtonTemplate:Clone()
 leftButton.Parent = MainFrameLeft
 leftButton.Size = UDim2.new(0, 110, 0, 45)
@@ -218,7 +272,7 @@ leftButton.Position = UDim2.new(0.5, -55, 0.5, -22.5)
 leftButton.Text = "Force.vs"
 leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 leftButton.BorderSizePixel = 2
-leftButton.BorderColor3 = Color3.fromRGB(160, 160, 160) -- Mismo borde que los botones de la derecha
+leftButton.BorderColor3 = Color3.fromRGB(160, 160, 160)
 leftButton.TextColor3 = Color3.fromRGB(200, 200, 200)
 leftButton.TextSize = 12
 
@@ -241,7 +295,8 @@ end)
 -- ABRIR PANEL AL TOCAR EL BOTÓN IZQUIERDO
 leftButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = true
-    TextBox.Text = ""
+    SpeedTextBox.Text = ""
+    VelocityTextBox.Text = ""
 end)
 
 -- ===== SISTEMA DE ARRASTRE PARA EL BOTÓN IZQUIERDO =====
@@ -312,4 +367,4 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-print("GUI completa con botones de la derecha como antes y panel Force.vs!")
+print("GUI con panel Force.vs con apartado Speed y línea vertical creada correctamente!")
