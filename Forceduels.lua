@@ -94,8 +94,8 @@ local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 300, 0, 180) -- Panel más pequeño
-PanelFrame.Position = UDim2.new(0.5, -150, 0.5, -90)
+PanelFrame.Size = UDim2.new(0, 400, 0, 200)
+PanelFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -121,36 +121,109 @@ TitleLabel.TextScaled = false
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 250, 0, 2)
-LineFrame.Position = UDim2.new(0.5, -125, 0, 55)
+LineFrame.Size = UDim2.new(0, 350, 0, 2)
+LineFrame.Position = UDim2.new(0.5, -175, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== APARTADO "SPEED" (más pequeño) =====
-local SpeedLabel = Instance.new("TextLabel")
+-- ===== LÍNEA VERTICAL (separador izquierda/derecha) =====
+local VerticalLine = Instance.new("Frame")
+VerticalLine.Parent = PanelFrame
+VerticalLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+VerticalLine.Size = UDim2.new(0, 2, 0, 100)
+VerticalLine.Position = UDim2.new(0.5, -20, 0, 70)
+VerticalLine.BackgroundTransparency = 0
+VerticalLine.BorderSizePixel = 0
+
+-- ===== APARTADO "SPEED" (lado izquierdo) =====
+local SpeedLabel = Instance.new("TextButton")
 SpeedLabel.Parent = PanelFrame
-SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Size = UDim2.new(0, 100, 0, 25)
-SpeedLabel.Position = UDim2.new(0.5, -50, 0, 75) -- Centrado
+SpeedLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SpeedLabel.Size = UDim2.new(0, 80, 0, 35)
+SpeedLabel.Position = UDim2.new(0.5, -180, 0, 80)
 SpeedLabel.Text = "Speed"
 SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-SpeedLabel.TextSize = 16 -- Más pequeño
+SpeedLabel.TextSize = 16
 SpeedLabel.Font = Enum.Font.SourceSansBold
-SpeedLabel.TextXAlignment = Enum.TextXAlignment.Center
+SpeedLabel.BorderSizePixel = 2
+SpeedLabel.BorderColor3 = Color3.fromRGB(160, 160, 160)
 
--- ===== APARTADO "COMBAT" (debajo de Speed) =====
-local CombatLabel = Instance.new("TextLabel")
+local speedCorner = Instance.new("UICorner")
+speedCorner.Parent = SpeedLabel
+speedCorner.CornerRadius = UDim.new(0, 5)
+
+-- ===== APARTADO "COMBAT" (lado izquierdo, debajo de Speed) =====
+local CombatLabel = Instance.new("TextButton")
 CombatLabel.Parent = PanelFrame
-CombatLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-CombatLabel.BackgroundTransparency = 1
-CombatLabel.Size = UDim2.new(0, 100, 0, 25)
-CombatLabel.Position = UDim2.new(0.5, -50, 0, 105) -- Debajo de Speed
+CombatLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+CombatLabel.Size = UDim2.new(0, 80, 0, 35)
+CombatLabel.Position = UDim2.new(0.5, -180, 0, 125)
 CombatLabel.Text = "Combat"
 CombatLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 CombatLabel.TextSize = 16
 CombatLabel.Font = Enum.Font.SourceSansBold
-CombatLabel.TextXAlignment = Enum.TextXAlignment.Center
+CombatLabel.BorderSizePixel = 2
+CombatLabel.BorderColor3 = Color3.fromRGB(160, 160, 160)
+
+local combatCorner = Instance.new("UICorner")
+combatCorner.Parent = CombatLabel
+combatCorner.CornerRadius = UDim.new(0, 5)
+
+-- ===== PANEL DE SPEED (lado derecho) =====
+local SpeedPanel = Instance.new("Frame")
+SpeedPanel.Parent = PanelFrame
+SpeedPanel.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+SpeedPanel.Size = UDim2.new(0, 150, 0, 80)
+SpeedPanel.Position = UDim2.new(0.5, 30, 0, 75)
+SpeedPanel.Visible = false
+SpeedPanel.BorderSizePixel = 2
+SpeedPanel.BorderColor3 = Color3.fromRGB(200, 200, 200)
+
+local speedPanelCorner = Instance.new("UICorner")
+speedPanelCorner.Parent = SpeedPanel
+speedPanelCorner.CornerRadius = UDim.new(0, 5)
+
+-- Texto dentro del panel de Speed
+local SpeedInfo = Instance.new("TextLabel")
+SpeedInfo.Parent = SpeedPanel
+SpeedInfo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+SpeedInfo.BackgroundTransparency = 1
+SpeedInfo.Size = UDim2.new(0, 130, 0, 60)
+SpeedInfo.Position = UDim2.new(0.5, -65, 0.5, -30)
+SpeedInfo.Text = "Speed Info\nValor: 50"
+SpeedInfo.TextColor3 = Color3.fromRGB(200, 200, 200)
+SpeedInfo.TextSize = 14
+SpeedInfo.Font = Enum.Font.SourceSans
+SpeedInfo.TextXAlignment = Enum.TextXAlignment.Center
+SpeedInfo.TextYAlignment = Enum.TextYAlignment.Center
+
+-- ===== PANEL DE COMBAT (lado derecho) =====
+local CombatPanel = Instance.new("Frame")
+CombatPanel.Parent = PanelFrame
+CombatPanel.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+CombatPanel.Size = UDim2.new(0, 150, 0, 80)
+CombatPanel.Position = UDim2.new(0.5, 30, 0, 75)
+CombatPanel.Visible = false
+CombatPanel.BorderSizePixel = 2
+CombatPanel.BorderColor3 = Color3.fromRGB(200, 200, 200)
+
+local combatPanelCorner = Instance.new("UICorner")
+combatPanelCorner.Parent = CombatPanel
+combatPanelCorner.CornerRadius = UDim.new(0, 5)
+
+-- Texto dentro del panel de Combat
+local CombatInfo = Instance.new("TextLabel")
+CombatInfo.Parent = CombatPanel
+CombatInfo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CombatInfo.BackgroundTransparency = 1
+CombatInfo.Size = UDim2.new(0, 130, 0, 60)
+CombatInfo.Position = UDim2.new(0.5, -65, 0.5, -30)
+CombatInfo.Text = "Combat Info\nNivel: 10"
+CombatInfo.TextColor3 = Color3.fromRGB(200, 200, 200)
+CombatInfo.TextSize = 14
+CombatInfo.Font = Enum.Font.SourceSans
+CombatInfo.TextXAlignment = Enum.TextXAlignment.Center
+CombatInfo.TextYAlignment = Enum.TextYAlignment.Center
 
 -- ===== BOTÓN DE CERRAR (X) =====
 local CloseButton = Instance.new("TextButton")
@@ -182,6 +255,59 @@ end)
 
 CloseButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = false
+    SpeedPanel.Visible = false
+    CombatPanel.Visible = false
+end)
+
+-- ===== FUNCIONES PARA ABRIR/ CERRAR PANELES =====
+local function toggleSpeedPanel()
+    if SpeedPanel.Visible then
+        SpeedPanel.Visible = false
+        CombatPanel.Visible = false
+    else
+        SpeedPanel.Visible = true
+        CombatPanel.Visible = false
+    end
+end
+
+local function toggleCombatPanel()
+    if CombatPanel.Visible then
+        CombatPanel.Visible = false
+        SpeedPanel.Visible = false
+    else
+        CombatPanel.Visible = true
+        SpeedPanel.Visible = false
+    end
+end
+
+-- Eventos de los botones Speed y Combat
+SpeedLabel.MouseButton1Click:Connect(function()
+    toggleSpeedPanel()
+end)
+
+CombatLabel.MouseButton1Click:Connect(function()
+    toggleCombatPanel()
+end)
+
+-- Efectos hover para Speed y Combat
+SpeedLabel.MouseEnter:Connect(function()
+    SpeedLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    SpeedLabel.BorderColor3 = Color3.fromRGB(200, 200, 200)
+end)
+
+SpeedLabel.MouseLeave:Connect(function()
+    SpeedLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SpeedLabel.BorderColor3 = Color3.fromRGB(160, 160, 160)
+end)
+
+CombatLabel.MouseEnter:Connect(function()
+    CombatLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    CombatLabel.BorderColor3 = Color3.fromRGB(200, 200, 200)
+end)
+
+CombatLabel.MouseLeave:Connect(function()
+    CombatLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    CombatLabel.BorderColor3 = Color3.fromRGB(160, 160, 160)
 end)
 
 -- ===== BOTÓN IZQUIERDO "Force.vs" =====
@@ -212,9 +338,11 @@ leftButton.MouseLeave:Connect(function()
     leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 end)
 
--- ABRIR PANEL AL TOCAR EL BOTÓN IZQUIERDO
+-- ABRIR PANEL PRINCIPAL AL TOCAR EL BOTÓN IZQUIERDO
 leftButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = true
+    SpeedPanel.Visible = false
+    CombatPanel.Visible = false
 end)
 
 -- ===== SISTEMA DE ARRASTRE PARA EL BOTÓN IZQUIERDO =====
@@ -285,4 +413,4 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-print("GUI con panel Force.vs con Speed pequeño y Combat debajo creada correctamente!")
+print("GUI con Speed y Combat a la izquierda y paneles desplegables a la derecha creada correctamente!")
