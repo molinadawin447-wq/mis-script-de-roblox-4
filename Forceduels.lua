@@ -15,12 +15,12 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- ===== MARCO DERECHO (botones principales) - MÁS ANCHO PARA 4 COLUMNAS EN PRIMERA FILA =====
+-- ===== MARCO DERECHO (botones principales) =====
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 320, 0, 340) -- Ancho 320 para 4 botones, alto 340
-MainFrame.Position = UDim2.new(1, -320, 0, 0) -- Pegado a la derecha y arriba
+MainFrame.Size = UDim2.new(0, 320, 0, 340)
+MainFrame.Position = UDim2.new(1, -320, 0, 0)
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -53,16 +53,19 @@ ButtonTemplate.Font = Enum.Font.SourceSansBold
 ButtonTemplate.TextSize = 12
 ButtonTemplate.TextWrapped = false
 
--- ===== DATOS DE LOS BOTONES (DERECHA) =====
--- Nueva disposición: fila 1 tiene 4 botones, filas 2-4 tienen 2 botones
+-- ===== NUEVA DISTRIBUCIÓN DE BOTONES =====
+-- Fila 1: LAGGER CARRY, DROP BRAINROT, AUTO LEFT
+-- Fila 2: BAT TP, AUTO BAT, AUTO RIGHT
+-- Fila 3: TP DOWN, CARRY SPEED
+-- Fila 4: LAGGER MODE, INSTA RESET
 local rowData = {
-    { -- Fila 1 (4 botones)
-        {"DROP", "BRAINROT"},
-        {"AUTO", "LEFT"},
+    { -- Fila 1 (3 botones)
         {"LAGGER", "CARRY"},
-        {"BAT", "TP"}
+        {"DROP", "BRAINROT"},
+        {"AUTO", "LEFT"}
     },
-    { -- Fila 2 (2 botones)
+    { -- Fila 2 (3 botones)
+        {"BAT", "TP"},
         {"AUTO", "BAT"},
         {"AUTO", "RIGHT"}
     },
@@ -81,7 +84,7 @@ local buttonSize = UDim2.new(0, 70, 0, 70)
 local spacingX = 6
 local spacingY = 6
 local startX = 8
-local startY = 5 -- Más arriba (antes 8)
+local startY = 5 -- Más arriba
 
 -- Crear botones en el marco derecho
 for rowIndex, row in ipairs(rowData) do
@@ -677,4 +680,4 @@ end
 -- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: primeros 4 botones en fila superior, botones más arriba.")
+print("GUI actualizada: LAGGER CARRY al lado izquierdo de DROP BRAINROT, BAT TP al lado izquierdo de AUTO BAT.")
