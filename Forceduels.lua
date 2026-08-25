@@ -7,21 +7,21 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- Marco principal (transparente) - Tamaño reducido para botones más pequeños
+-- Marco principal (transparente) - Movido más arriba y a la derecha
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1 -- Totalmente transparente
-MainFrame.Size = UDim2.new(0, 220, 0, 330) -- Marco más pequeño
-MainFrame.Position = UDim2.new(1, -230, 0.5, -165) -- Centrado verticalmente
+MainFrame.Size = UDim2.new(0, 220, 0, 330) -- Tamaño del marco
+MainFrame.Position = UDim2.new(1, -240, 0.35, -165) -- Más arriba (0.35) y más a la derecha (-240)
 
 -- Plantilla de botón
 ButtonTemplate.Parent = MainFrame
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Negro
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200) -- Gris claro para el texto
 ButtonTemplate.BorderSizePixel = 2 -- Borde visible
-ButtonTemplate.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Borde gris claro
+ButtonTemplate.BorderColor3 = Color3.fromRGB(160, 160, 160) -- Borde gris
 ButtonTemplate.Font = Enum.Font.SourceSansBold
-ButtonTemplate.TextSize = 10 -- Texto más pequeño
+ButtonTemplate.TextSize = 10
 ButtonTemplate.TextWrapped = true
 ButtonTemplate.TextScaled = false
 
@@ -35,8 +35,8 @@ local buttonsData = {
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 85, 0, 40) -- Botones más pequeños y cuadrados
-local spacing = 10 -- Espacio reducido
+local buttonSize = UDim2.new(0, 85, 0, 40) -- Botones pequeños
+local spacing = 10
 local startX = 10
 local startY = 10
 
@@ -56,25 +56,25 @@ for row = 0, 4 do
         local index = row * 2 + col + 1
         btn.Text = buttonsData[index] or "BTN " .. index
         
-        -- Estilo del botón
+        -- Estilo del botón (borde gris)
         btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         btn.BorderSizePixel = 2
-        btn.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Borde gris claro
-        btn.TextColor3 = Color3.fromRGB(200, 200, 200) -- Texto gris claro
+        btn.BorderColor3 = Color3.fromRGB(160, 160, 160) -- Borde gris
+        btn.TextColor3 = Color3.fromRGB(200, 200, 200)
         
         -- Esquinas redondeadas
         local corner = Instance.new("UICorner")
         corner.Parent = btn
-        corner.CornerRadius = UDim.new(0, 8) -- Puntas redondeadas
+        corner.CornerRadius = UDim.new(0, 8)
         
-        -- Efecto hover (borde más brillante)
+        -- Efecto hover
         btn.MouseEnter:Connect(function()
-            btn.BorderColor3 = Color3.fromRGB(220, 220, 220) -- Borde más claro
+            btn.BorderColor3 = Color3.fromRGB(200, 200, 200) -- Borde más claro
             btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         end)
         
         btn.MouseLeave:Connect(function()
-            btn.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Vuelve al borde original
+            btn.BorderColor3 = Color3.fromRGB(160, 160, 160) -- Vuelve al gris original
             btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         end)
         
@@ -87,5 +87,4 @@ for row = 0, 4 do
     end
 end
 
--- Aplicar esquinas redondeadas a todos los botones (ya aplicado en cada botón)
-print("GUI con botones pequeños, cuadrados y bordes grises creada correctamente!")
+print("GUI movida más arriba y a la derecha con bordes grises!")
