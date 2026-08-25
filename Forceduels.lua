@@ -1,11 +1,18 @@
--- Configuración de la GUI
+-- ===== GUARDADO PERSISTENTE (Atributos del jugador) =====
+local player = game.Players.LocalPlayer
+
+-- Leer valores guardados o usar valores por defecto
+local savedSpeed = player:GetAttribute("SpeedValue") or 30
+local savedCarry = player:GetAttribute("CarrySpeedValue") or 30
+local savedLagger = player:GetAttribute("LaggerModeValue") or 10.1  -- Nuevo
+
+-- ===== Configuración de la GUI =====
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local MainFrameLeft = Instance.new("Frame")
 local ButtonTemplate = Instance.new("TextButton")
 
--- Propiedades de la GUI principal
-ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
+ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
 -- ===== MARCO DERECHO (botones principales) =====
@@ -48,7 +55,6 @@ local spacing = 10
 local startX = 10
 local startY = 10
 
--- Crear botones en el marco derecho
 for row = 0, 4 do
     for col = 0, 1 do
         local btn = ButtonTemplate:Clone()
@@ -90,16 +96,16 @@ for row = 0, 4 do
 end
 
 -- ===== VARIABLES DE ESTADO =====
-local selectedMode = "Main" -- "Main" o "Steal"
-local autoRoboState = false -- false = Off, true = On
+local selectedMode = "Main"
+local autoRoboState = false
 
--- ===== PANEL EMERGENTE (Force.vs) - MÁS ALTO Y MÁS ANCHO =====
+-- ===== PANEL EMERGENTE (Force.vs) - MÁS ALTO Y ANCHO =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 PanelFrame.BackgroundTransparency = 0
-PanelFrame.Size = UDim2.new(0, 450, 0, 250) -- Antes 420x220
-PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -125) -- Centrado
+PanelFrame.Size = UDim2.new(0, 450, 0, 280) -- Un poco más alto para el nuevo elemento
+PanelFrame.Position = UDim2.new(0.5, -225, 0.5, -140)
 PanelFrame.Visible = false
 PanelFrame.BorderSizePixel = 2
 PanelFrame.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -108,7 +114,7 @@ local panelCorner = Instance.new("UICorner")
 panelCorner.Parent = PanelFrame
 panelCorner.CornerRadius = UDim.new(0, 10)
 
--- ===== TÍTULO DEL PANEL "Force.vs" =====
+-- ===== TÍTULO =====
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Parent = PanelFrame
 TitleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -121,16 +127,16 @@ TitleLabel.TextSize = 28
 TitleLabel.Font = Enum.Font.SourceSansBold
 TitleLabel.TextScaled = false
 
--- ===== LÍNEA DEBAJO DEL TÍTULO (más ancha) =====
+-- ===== LÍNEA HORIZONTAL =====
 local LineFrame = Instance.new("Frame")
 LineFrame.Parent = PanelFrame
 LineFrame.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-LineFrame.Size = UDim2.new(0, 400, 0, 2) -- Antes 370
-LineFrame.Position = UDim2.new(0.5, -200, 0, 55) -- Centrado
+LineFrame.Size = UDim2.new(0, 400, 0, 2)
+LineFrame.Position = UDim2.new(0.5, -200, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== BOTONES MAIN Y STEAL (lado izquierdo) =====
+-- ===== BOTONES MAIN Y STEAL =====
 local MainButton = Instance.new("TextButton")
 MainButton.Parent = PanelFrame
 MainButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -163,23 +169,23 @@ local stealCorner = Instance.new("UICorner")
 stealCorner.Parent = StealButton
 stealCorner.CornerRadius = UDim.new(0, 5)
 
--- ===== CONTENEDOR DINÁMICO (lado derecho) =====
+-- ===== CONTENEDOR DERECHO (más alto para los 3 elementos) =====
 local RightContainer = Instance.new("Frame")
 RightContainer.Parent = PanelFrame
 RightContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 RightContainer.BackgroundTransparency = 1
-RightContainer.Size = UDim2.new(0, 200, 0, 120) -- Un poco más alto para el espacio
-RightContainer.Position = UDim2.new(0.5, -60, 0, 70) -- Misma posición
+RightContainer.Size = UDim2.new(0, 200, 0, 150) -- Aumentado para 3 filas
+RightContainer.Position = UDim2.new(0.5, -60, 0, 70)
 
 -- ===== CONTENIDO DE MAIN =====
 local MainContent = Instance.new("Frame")
 MainContent.Parent = RightContainer
 MainContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainContent.BackgroundTransparency = 1
-MainContent.Size = UDim2.new(0, 200, 0, 100)
+MainContent.Size = UDim2.new(0, 200, 0, 150) -- Aumentado para 3 filas
 MainContent.Position = UDim2.new(0, 0, 0, 0)
 
--- Speed
+-- 1. Speed
 local SpeedContainer = Instance.new("Frame")
 SpeedContainer.Parent = MainContent
 SpeedContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -204,7 +210,7 @@ SpeedInput.Parent = SpeedContainer
 SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SpeedInput.Size = UDim2.new(0, 80, 0, 30)
 SpeedInput.Position = UDim2.new(0, 70, 0, 2)
-SpeedInput.Text = "30"
+SpeedInput.Text = tostring(savedSpeed)
 SpeedInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedInput.TextSize = 16
 SpeedInput.Font = Enum.Font.SourceSansBold
@@ -221,18 +227,17 @@ inputCorner.CornerRadius = UDim.new(0, 5)
 SpeedInput.FocusLost:Connect(function()
     local value = tonumber(SpeedInput.Text)
     if value then
-        if value < 1 then
-            SpeedInput.Text = "1"
-        elseif value > 60 then
-            SpeedInput.Text = "60"
-        end
-        print("Velocidad ajustada a: " .. SpeedInput.Text)
+        if value < 1 then value = 1
+        elseif value > 60 then value = 60 end
+        SpeedInput.Text = tostring(value)
+        player:SetAttribute("SpeedValue", value)
+        print("Speed ajustado a: " .. value)
     else
-        SpeedInput.Text = "30"
+        SpeedInput.Text = tostring(savedSpeed)
     end
 end)
 
--- Carry Speed
+-- 2. Carry Speed
 local CarryContainer = Instance.new("Frame")
 CarryContainer.Parent = MainContent
 CarryContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -257,7 +262,7 @@ CarryInput.Parent = CarryContainer
 CarryInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 CarryInput.Size = UDim2.new(0, 80, 0, 30)
 CarryInput.Position = UDim2.new(0, 110, 0, 2)
-CarryInput.Text = "30"
+CarryInput.Text = tostring(savedCarry)
 CarryInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 CarryInput.TextSize = 16
 CarryInput.Font = Enum.Font.SourceSansBold
@@ -274,18 +279,69 @@ carryInputCorner.CornerRadius = UDim.new(0, 5)
 CarryInput.FocusLost:Connect(function()
     local value = tonumber(CarryInput.Text)
     if value then
-        if value < 1 then
-            CarryInput.Text = "1"
-        elseif value > 60 then
-            CarryInput.Text = "60"
-        end
-        print("Carry Speed ajustado a: " .. CarryInput.Text)
+        if value < 1 then value = 1
+        elseif value > 60 then value = 60 end
+        CarryInput.Text = tostring(value)
+        player:SetAttribute("CarrySpeedValue", value)
+        print("Carry Speed ajustado a: " .. value)
     else
-        CarryInput.Text = "30"
+        CarryInput.Text = tostring(savedCarry)
     end
 end)
 
--- ===== CONTENIDO DE STEAL =====
+-- 3. LAGGER MODE (NUEVO)
+local LaggerContainer = Instance.new("Frame")
+LaggerContainer.Parent = MainContent
+LaggerContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LaggerContainer.BackgroundTransparency = 1
+LaggerContainer.Size = UDim2.new(0, 200, 0, 35)
+LaggerContainer.Position = UDim2.new(0, 0, 0, 90) -- Debajo de Carry
+
+local LaggerLabel = Instance.new("TextLabel")
+LaggerLabel.Parent = LaggerContainer
+LaggerLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+LaggerLabel.BackgroundTransparency = 1
+LaggerLabel.Size = UDim2.new(0, 110, 0, 35)
+LaggerLabel.Position = UDim2.new(0, 0, 0, 0)
+LaggerLabel.Text = "Lagger Mode"
+LaggerLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+LaggerLabel.TextSize = 16
+LaggerLabel.Font = Enum.Font.SourceSansBold
+LaggerLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local LaggerInput = Instance.new("TextBox")
+LaggerInput.Parent = LaggerContainer
+LaggerInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+LaggerInput.Size = UDim2.new(0, 80, 0, 30)
+LaggerInput.Position = UDim2.new(0, 115, 0, 2) -- Ajustado para que no se solape
+LaggerInput.Text = tostring(savedLagger)
+LaggerInput.TextColor3 = Color3.fromRGB(200, 200, 200)
+LaggerInput.TextSize = 16
+LaggerInput.Font = Enum.Font.SourceSansBold
+LaggerInput.BorderSizePixel = 2
+LaggerInput.BorderColor3 = Color3.fromRGB(200, 200, 200)
+LaggerInput.PlaceholderText = "1-20"
+LaggerInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+LaggerInput.ClearTextOnFocus = false
+
+local laggerInputCorner = Instance.new("UICorner")
+laggerInputCorner.Parent = LaggerInput
+laggerInputCorner.CornerRadius = UDim.new(0, 5)
+
+LaggerInput.FocusLost:Connect(function()
+    local value = tonumber(LaggerInput.Text)
+    if value then
+        if value < 1 then value = 1
+        elseif value > 20 then value = 20 end
+        LaggerInput.Text = tostring(value)
+        player:SetAttribute("LaggerModeValue", value)
+        print("Lagger Mode ajustado a: " .. value)
+    else
+        LaggerInput.Text = tostring(savedLagger)
+    end
+end)
+
+-- ===== CONTENIDO DE STEAL (sin cambios) =====
 local StealContent = Instance.new("Frame")
 StealContent.Parent = RightContainer
 StealContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -294,7 +350,6 @@ StealContent.Size = UDim2.new(0, 200, 0, 60)
 StealContent.Position = UDim2.new(0, 0, 0, 0)
 StealContent.Visible = false
 
--- Etiqueta "Robo Automático"
 local RoboLabel = Instance.new("TextLabel")
 RoboLabel.Parent = StealContent
 RoboLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -307,7 +362,6 @@ RoboLabel.TextSize = 16
 RoboLabel.Font = Enum.Font.SourceSansBold
 RoboLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- Botón Toggle Off/On
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = StealContent
 ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -324,26 +378,22 @@ local toggleCorner = Instance.new("UICorner")
 toggleCorner.Parent = ToggleButton
 toggleCorner.CornerRadius = UDim.new(0, 5)
 
--- Función para actualizar el estado del toggle
 local function updateToggle()
     if autoRoboState then
         ToggleButton.Text = "On"
         ToggleButton.TextColor3 = Color3.fromRGB(100, 255, 100)
-        print("Robo Automático: ON")
     else
         ToggleButton.Text = "Off"
         ToggleButton.TextColor3 = Color3.fromRGB(255, 100, 100)
-        print("Robo Automático: OFF")
     end
 end
 
--- Evento del toggle
 ToggleButton.MouseButton1Click:Connect(function()
     autoRoboState = not autoRoboState
     updateToggle()
+    print("Robo Automático: " .. (autoRoboState and "ON" or "OFF"))
 end)
 
--- Efecto hover
 ToggleButton.MouseEnter:Connect(function()
     ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 end)
@@ -352,7 +402,7 @@ ToggleButton.MouseLeave:Connect(function()
     ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 end)
 
--- ===== FUNCIÓN PARA ACTUALIZAR LA VISIBILIDAD =====
+-- ===== FUNCIONES DE VISIBILIDAD =====
 local function updateContent()
     if selectedMode == "Main" then
         MainContent.Visible = true
@@ -371,7 +421,6 @@ local function updateContent()
     end
 end
 
--- ===== EVENTOS DE LOS BOTONES MAIN Y STEAL =====
 MainButton.MouseButton1Click:Connect(function()
     selectedMode = "Main"
     updateContent()
@@ -382,7 +431,6 @@ StealButton.MouseButton1Click:Connect(function()
     updateContent()
 end)
 
--- Efectos hover
 MainButton.MouseEnter:Connect(function()
     if selectedMode ~= "Main" then
         MainButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
@@ -407,7 +455,7 @@ StealButton.MouseLeave:Connect(function()
     end
 end)
 
--- ===== BOTÓN DE CERRAR (X) =====
+-- ===== BOTÓN CERRAR =====
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = PanelFrame
 CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
@@ -439,7 +487,7 @@ CloseButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = false
 end)
 
--- ===== BOTÓN IZQUIERDO "Force.vs" =====
+-- ===== BOTÓN IZQUIERDO "Force.vs" (movible) =====
 local leftButton = ButtonTemplate:Clone()
 leftButton.Parent = MainFrameLeft
 leftButton.Size = UDim2.new(0, 110, 0, 45)
@@ -467,14 +515,13 @@ leftButton.MouseLeave:Connect(function()
     leftButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 end)
 
--- ABRIR PANEL PRINCIPAL
 leftButton.MouseButton1Click:Connect(function()
     PanelFrame.Visible = true
     updateContent()
     updateToggle()
 end)
 
--- ===== SISTEMA DE ARRASTRE PARA EL BOTÓN IZQUIERDO =====
+-- ===== SISTEMA DE ARRASTRE (sin cambios) =====
 local dragging = false
 local dragStartPos = Vector2.new(0, 0)
 local frameStartPos = Vector2.new(0, 0)
@@ -484,12 +531,10 @@ local function updateDrag(input)
         local delta = input.Position - dragStartPos
         local newX = frameStartPos.X + delta.X
         local newY = frameStartPos.Y + delta.Y
-        
         local screenSize = game:GetService("UserInputService"):GetMouseLocation()
         local frameSize = MainFrameLeft.Size
         newX = math.max(0, math.min(newX, screenSize.X - frameSize.X.Offset))
         newY = math.max(0, math.min(newY, screenSize.Y - frameSize.Y.Offset))
-        
         MainFrameLeft.Position = UDim2.new(0, newX, 0, newY)
     end
 end
@@ -526,12 +571,10 @@ game:GetService("UserInputService").InputChanged:Connect(function(input)
         local delta = Vector2.new(mouse.X, mouse.Y) - dragStartPos
         local newX = frameStartPos.X + delta.X
         local newY = frameStartPos.Y + delta.Y
-        
         local screenSize = game:GetService("UserInputService"):GetMouseLocation()
         local frameSize = MainFrameLeft.Size
         newX = math.max(0, math.min(newX, screenSize.X - frameSize.X.Offset))
         newY = math.max(0, math.min(newY, screenSize.Y - frameSize.Y.Offset))
-        
         MainFrameLeft.Position = UDim2.new(0, newX, 0, newY)
     end
 end)
@@ -545,4 +588,4 @@ end)
 -- Inicialización
 updateContent()
 updateToggle()
-print("GUI con panel más alto y ancho, y todo el contenido intacto.")
+print("GUI con Lagger Mode añadido (valor inicial 10.1, rango 1-20).")
