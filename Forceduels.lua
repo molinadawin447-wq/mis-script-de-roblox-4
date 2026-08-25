@@ -10,7 +10,7 @@ local savedLagger = player:GetAttribute("LaggerModeValue") or 10.1
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local MainFrameLeft = Instance.new("Frame")
-local ButtonTemplate = Instance.new("TextButton")
+local ButtonTemplate = Instance.new("TextButton")  -- Plantilla para botón izquierdo (Force.vs) y posiblemente para los derechos? Mejor crear una plantilla separada para los derechos.
 
 ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
@@ -19,8 +19,8 @@ ScreenGui.Name = "CustomGUI"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 220, 0, 330)
-MainFrame.Position = UDim2.new(1, -220, 0.35, -165)
+MainFrame.Size = UDim2.new(0, 220, 0, 350) -- Aumentado un poco para los botones más altos
+MainFrame.Position = UDim2.new(1, -220, 0.35, -175)
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -29,67 +29,86 @@ MainFrameLeft.BackgroundTransparency = 1
 MainFrameLeft.Size = UDim2.new(0, 120, 0, 60)
 MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 
--- Plantilla de botón (para los botones de la derecha)
-ButtonTemplate.Parent = MainFrame
+-- Plantilla de botón para los botones de la derecha (nueva)
+local RightButtonTemplate = Instance.new("TextButton")
+RightButtonTemplate.Parent = MainFrame
+RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+RightButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
+RightButtonTemplate.BorderSizePixel = 3  -- Borde más grueso
+RightButtonTemplate.BorderColor3 = Color3.fromRGB(255, 255, 255) -- Borde blanco
+RightButtonTemplate.Font = Enum.Font.SourceSansBold
+RightButtonTemplate.TextSize = 11
+RightButtonTemplate.TextWrapped = true
+RightButtonTemplate.TextScaled = false
+RightButtonTemplate.TextXAlignment = Enum.TextXAlignment.Center
+RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
+
+-- Plantilla de botón para el botón izquierdo (Force.vs) - mantiene estilo anterior
+ButtonTemplate.Parent = MainFrameLeft
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
 ButtonTemplate.BorderSizePixel = 2
 ButtonTemplate.BorderColor3 = Color3.fromRGB(160, 160, 160)
 ButtonTemplate.Font = Enum.Font.SourceSansBold
-ButtonTemplate.TextSize = 10
-ButtonTemplate.TextWrapped = true
-ButtonTemplate.TextScaled = false
+ButtonTemplate.TextSize = 12
+ButtonTemplate.TextWrapped = false
 
--- ===== DATOS DE LOS BOTONES (DERECHA) =====
+-- ===== DATOS DE LOS BOTONES (DERECHA) con dos líneas =====
 local buttonsData = {
-    "DROP BRAINROT", "AUTO LEFT",
-    "AUTO BAT", "AUTO RIGHT",
-    "TP DOWN", "CARRY SPEED",
-    "LAGGER MODE", "INSTA RESET",
-    "LAGGER CARRY", "BAT TP"
+    {"DROP", "BRAINROT"},
+    {"AUTO", "LEFT"},
+    {"AUTO", "BAT"},
+    {"AUTO", "RIGHT"},
+    {"TP", "DOWN"},
+    {"CARRY", "SPEED"},
+    {"LAGGER", "MODE"},
+    {"INSTA", "RESET"},
+    {"LAGGER", "CARRY"},
+    {"BAT", "TP"}
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 85, 0, 40)
-local spacing = 10
+local buttonSize = UDim2.new(0, 85, 0, 55)  -- Más cuadrado que antes
+local spacingX = 8
+local spacingY = 8
 local startX = 10
 local startY = 10
 
+-- Crear botones en el marco derecho
 for row = 0, 4 do
     for col = 0, 1 do
-        local btn = ButtonTemplate:Clone()
+        local btn = RightButtonTemplate:Clone()
         btn.Parent = MainFrame
         
-        local xPos = startX + (col * (buttonSize.X.Offset + spacing + 5))
-        local yPos = startY + (row * (buttonSize.Y.Offset + spacing))
+        local xPos = startX + (col * (buttonSize.X.Offset + spacingX))
+        local yPos = startY + (row * (buttonSize.Y.Offset + spacingY))
         btn.Position = UDim2.new(0, xPos, 0, yPos)
         btn.Size = buttonSize
         
         local index = row * 2 + col + 1
-        btn.Text = buttonsData[index] or "BTN " .. index
+        local data = buttonsData[index]
+        btn.Text = data[1] .. "\n" .. data[2]  -- Dos líneas
         
-        btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-        btn.BorderSizePixel = 2
-        btn.BorderColor3 = Color3.fromRGB(160, 160, 160)
-        btn.TextColor3 = Color3.fromRGB(200, 200, 200)
-        
-        local corner = Instance.new("UICorner")
-        corner.Parent = btn
-        corner.CornerRadius = UDim.new(0, 8)
-        
+        -- Estilo de borde blanco ya aplicado en la plantilla
+        -- Efecto hover: borde más brillante y fondo ligeramente más claro
         btn.MouseEnter:Connect(function()
-            btn.BorderColor3 = Color3.fromRGB(200, 200, 200)
-            btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+            btn.BorderColor3 = Color3.fromRGB(255, 255, 255)  -- Se mantiene blanco
+            btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         end)
         
         btn.MouseLeave:Connect(function()
-            btn.BorderColor3 = Color3.fromRGB(160, 160, 160)
+            btn.BorderColor3 = Color3.fromRGB(255, 255, 255)
             btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         end)
         
         btn.MouseButton1Click:Connect(function()
-            print("Botón " .. btn.Text .. " presionado!")
+            print("Botón " .. data[1] .. " " .. data[2] .. " presionado!")
         end)
+        
+        -- Esquinas redondeadas (ya se aplican en cada botón)
+        local corner = Instance.new("UICorner")
+        corner.Parent = btn
+        corner.CornerRadius = UDim.new(0, 8)
         
         table.insert(buttons, btn)
     end
@@ -99,7 +118,7 @@ end
 local selectedMode = "Main"
 local autoRoboState = false
 
--- ===== PANEL EMERGENTE (Force.vs) - MÁS ALTO Y ANCHO =====
+-- ===== PANEL EMERGENTE (Force.vs) =====
 local PanelFrame = Instance.new("Frame")
 PanelFrame.Parent = ScreenGui
 PanelFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -185,7 +204,7 @@ MainContent.BackgroundTransparency = 1
 MainContent.Size = UDim2.new(0, 200, 0, 150)
 MainContent.Position = UDim2.new(0, 0, 0, 0)
 
--- 1. Normal Speed (cambié el texto de "Speed" a "Normal Speed")
+-- 1. Normal Speed
 local SpeedContainer = Instance.new("Frame")
 SpeedContainer.Parent = MainContent
 SpeedContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -197,7 +216,7 @@ local SpeedLabel = Instance.new("TextLabel")
 SpeedLabel.Parent = SpeedContainer
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Size = UDim2.new(0, 110, 0, 35)  -- Más ancho para que quepa "Normal Speed"
+SpeedLabel.Size = UDim2.new(0, 110, 0, 35)
 SpeedLabel.Position = UDim2.new(0, 0, 0, 0)
 SpeedLabel.Text = "Normal Speed"
 SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -209,7 +228,7 @@ local SpeedInput = Instance.new("TextBox")
 SpeedInput.Parent = SpeedContainer
 SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 SpeedInput.Size = UDim2.new(0, 80, 0, 30)
-SpeedInput.Position = UDim2.new(0, 115, 0, 2)  -- Ajustado para que no se solape
+SpeedInput.Position = UDim2.new(0, 115, 0, 2)
 SpeedInput.Text = tostring(savedSpeed)
 SpeedInput.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedInput.TextSize = 16
@@ -341,7 +360,7 @@ LaggerInput.FocusLost:Connect(function()
     end
 end)
 
--- ===== CONTENIDO DE STEAL (sin cambios) =====
+-- ===== CONTENIDO DE STEAL =====
 local StealContent = Instance.new("Frame")
 StealContent.Parent = RightContainer
 StealContent.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -521,7 +540,7 @@ leftButton.MouseButton1Click:Connect(function()
     updateToggle()
 end)
 
--- ===== SISTEMA DE ARRASTRE (sin cambios) =====
+-- ===== SISTEMA DE ARRASTRE =====
 local dragging = false
 local dragStartPos = Vector2.new(0, 0)
 local frameStartPos = Vector2.new(0, 0)
@@ -588,4 +607,4 @@ end)
 -- Inicialización
 updateContent()
 updateToggle()
-print("GUI actualizada: 'Speed' ahora se llama 'Normal Speed'.")
+print("GUI actualizada: botones de la derecha más cuadrados, texto en dos líneas, bordes blancos gruesos.")
