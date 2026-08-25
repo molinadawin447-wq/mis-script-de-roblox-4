@@ -7,21 +7,22 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- Marco principal (transparente) - Ajustado para verse completo en pantalla
+-- Marco principal (transparente) - Tamaño reducido para botones más pequeños
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1 -- Totalmente transparente
-MainFrame.Size = UDim2.new(0, 280, 0, 400) -- Marco más grande
-MainFrame.Position = UDim2.new(1, -290, 0.5, -200) -- Centrado verticalmente con margen
+MainFrame.Size = UDim2.new(0, 220, 0, 330) -- Marco más pequeño
+MainFrame.Position = UDim2.new(1, -230, 0.5, -165) -- Centrado verticalmente
 
 -- Plantilla de botón
 ButtonTemplate.Parent = MainFrame
-ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-ButtonTemplate.TextColor3 = Color3.fromRGB(255, 255, 255)
-ButtonTemplate.BorderSizePixel = 0
+ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Negro
+ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200) -- Gris claro para el texto
+ButtonTemplate.BorderSizePixel = 2 -- Borde visible
+ButtonTemplate.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Borde gris claro
 ButtonTemplate.Font = Enum.Font.SourceSansBold
-ButtonTemplate.TextSize = 11
-ButtonTemplate.TextWrapped = true -- Envuelve el texto si es muy largo
+ButtonTemplate.TextSize = 10 -- Texto más pequeño
+ButtonTemplate.TextWrapped = true
 ButtonTemplate.TextScaled = false
 
 -- Datos de los botones
@@ -34,10 +35,10 @@ local buttonsData = {
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 110, 0, 55) -- Botones más grandes
-local spacing = 15
-local startX = 15
-local startY = 15
+local buttonSize = UDim2.new(0, 85, 0, 40) -- Botones más pequeños y cuadrados
+local spacing = 10 -- Espacio reducido
+local startX = 10
+local startY = 10
 
 -- 5 filas y 2 columnas
 for row = 0, 4 do
@@ -46,7 +47,7 @@ for row = 0, 4 do
         btn.Parent = MainFrame
         
         -- Posición dentro del marco
-        local xPos = startX + (col * (buttonSize.X.Offset + spacing))
+        local xPos = startX + (col * (buttonSize.X.Offset + spacing + 5))
         local yPos = startY + (row * (buttonSize.Y.Offset + spacing))
         btn.Position = UDim2.new(0, xPos, 0, yPos)
         btn.Size = buttonSize
@@ -57,33 +58,34 @@ for row = 0, 4 do
         
         -- Estilo del botón
         btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-        btn.BorderSizePixel = 0
+        btn.BorderSizePixel = 2
+        btn.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Borde gris claro
+        btn.TextColor3 = Color3.fromRGB(200, 200, 200) -- Texto gris claro
         
         -- Esquinas redondeadas
         local corner = Instance.new("UICorner")
         corner.Parent = btn
-        corner.CornerRadius = UDim.new(0, 10)
+        corner.CornerRadius = UDim.new(0, 8) -- Puntas redondeadas
         
-        -- Efecto hover
+        -- Efecto hover (borde más brillante)
         btn.MouseEnter:Connect(function()
-            btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+            btn.BorderColor3 = Color3.fromRGB(220, 220, 220) -- Borde más claro
+            btn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
         end)
         
         btn.MouseLeave:Connect(function()
+            btn.BorderColor3 = Color3.fromRGB(180, 180, 180) -- Vuelve al borde original
             btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         end)
         
         -- Evento click
         btn.MouseButton1Click:Connect(function()
             print("Botón " .. btn.Text .. " presionado!")
-            -- Aquí puedes agregar la funcionalidad que desees
         end)
         
         table.insert(buttons, btn)
     end
 end
 
--- Asegurar que el marco se vea completo en pantalla
-MainFrame.ClipsDescendants = false
-
-print("GUI completa visible en pantalla!")
+-- Aplicar esquinas redondeadas a todos los botones (ya aplicado en cada botón)
+print("GUI con botones pequeños, cuadrados y bordes grises creada correctamente!")
