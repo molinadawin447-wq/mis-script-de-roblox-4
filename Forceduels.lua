@@ -126,12 +126,12 @@ LineFrame.Position = UDim2.new(0.5, -200, 0, 55)
 LineFrame.BackgroundTransparency = 0
 LineFrame.BorderSizePixel = 0
 
--- ===== LÍNEA VERTICAL (separador izquierda/derecha) =====
+-- ===== LÍNEA VERTICAL (separador - más pegada a los apartados) =====
 local VerticalLine = Instance.new("Frame")
 VerticalLine.Parent = PanelFrame
 VerticalLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
 VerticalLine.Size = UDim2.new(0, 2, 0, 110)
-VerticalLine.Position = UDim2.new(0.5, -30, 0, 75)
+VerticalLine.Position = UDim2.new(0.5, -10, 0, 75) -- Más pegada a la izquierda
 VerticalLine.BackgroundTransparency = 0
 VerticalLine.BorderSizePixel = 0
 
@@ -140,7 +140,7 @@ local SpeedLabel = Instance.new("TextButton")
 SpeedLabel.Parent = PanelFrame
 SpeedLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 SpeedLabel.Size = UDim2.new(0, 80, 0, 35)
-SpeedLabel.Position = UDim2.new(0.5, -190, 0, 80)
+SpeedLabel.Position = UDim2.new(0.5, -180, 0, 80)
 SpeedLabel.Text = "Speed"
 SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 SpeedLabel.TextSize = 16
@@ -157,7 +157,7 @@ local CombatLabel = Instance.new("TextButton")
 CombatLabel.Parent = PanelFrame
 CombatLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 CombatLabel.Size = UDim2.new(0, 80, 0, 35)
-CombatLabel.Position = UDim2.new(0.5, -190, 0, 130)
+CombatLabel.Position = UDim2.new(0.5, -180, 0, 130)
 CombatLabel.Text = "Combat"
 CombatLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 CombatLabel.TextSize = 16
@@ -173,8 +173,8 @@ combatCorner.CornerRadius = UDim.new(0, 5)
 local SpeedPanel = Instance.new("Frame")
 SpeedPanel.Parent = PanelFrame
 SpeedPanel.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-SpeedPanel.Size = UDim2.new(0, 180, 0, 80)
-SpeedPanel.Position = UDim2.new(0.5, 40, 0, 75)
+SpeedPanel.Size = UDim2.new(0, 200, 0, 100)
+SpeedPanel.Position = UDim2.new(0.5, 30, 0, 70)
 SpeedPanel.Visible = false
 SpeedPanel.BorderSizePixel = 2
 SpeedPanel.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -196,51 +196,47 @@ SpeedTitle.TextSize = 14
 SpeedTitle.Font = Enum.Font.SourceSansBold
 SpeedTitle.TextXAlignment = Enum.TextXAlignment.Center
 
--- Slider para modificar velocidad (1-60)
-local SpeedSlider = Instance.new("TextButton")
-SpeedSlider.Parent = SpeedPanel
-SpeedSlider.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-SpeedSlider.Size = UDim2.new(0, 150, 0, 25)
-SpeedSlider.Position = UDim2.new(0.5, -75, 0, 35)
-SpeedSlider.Text = "1"
-SpeedSlider.TextColor3 = Color3.fromRGB(200, 200, 200)
-SpeedSlider.TextSize = 14
-SpeedSlider.Font = Enum.Font.SourceSansBold
-SpeedSlider.BorderSizePixel = 2
-SpeedSlider.BorderColor3 = Color3.fromRGB(200, 200, 200)
+-- Cuadro de texto para ingresar velocidad con teclado
+local SpeedInput = Instance.new("TextBox")
+SpeedInput.Parent = SpeedPanel
+SpeedInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+SpeedInput.Size = UDim2.new(0, 100, 0, 30)
+SpeedInput.Position = UDim2.new(0.5, -50, 0, 40)
+SpeedInput.Text = "1"
+SpeedInput.TextColor3 = Color3.fromRGB(200, 200, 200)
+SpeedInput.TextSize = 16
+SpeedInput.Font = Enum.Font.SourceSansBold
+SpeedInput.BorderSizePixel = 2
+SpeedInput.BorderColor3 = Color3.fromRGB(200, 200, 200)
+SpeedInput.PlaceholderText = "1-60"
+SpeedInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+SpeedInput.ClearTextOnFocus = false
 
-local sliderCorner = Instance.new("UICorner")
-sliderCorner.Parent = SpeedSlider
-sliderCorner.CornerRadius = UDim.new(0, 5)
+local inputCorner = Instance.new("UICorner")
+inputCorner.Parent = SpeedInput
+inputCorner.CornerRadius = UDim.new(0, 5)
 
--- Variable para el valor de velocidad
-local speedValue = 1
-
--- Función para actualizar el slider
-SpeedSlider.MouseButton1Click:Connect(function()
-    speedValue = speedValue + 1
-    if speedValue > 60 then
-        speedValue = 1
+-- Función para validar entrada de velocidad
+SpeedInput.FocusLost:Connect(function()
+    local value = tonumber(SpeedInput.Text)
+    if value then
+        if value < 1 then
+            SpeedInput.Text = "1"
+        elseif value > 60 then
+            SpeedInput.Text = "60"
+        end
+        print("Velocidad ajustada a: " .. SpeedInput.Text)
+    else
+        SpeedInput.Text = "1"
     end
-    SpeedSlider.Text = tostring(speedValue)
-    print("Velocidad ajustada a: " .. speedValue)
-end)
-
--- Efecto hover del slider
-SpeedSlider.MouseEnter:Connect(function()
-    SpeedSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-end)
-
-SpeedSlider.MouseLeave:Connect(function()
-    SpeedSlider.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 end)
 
 -- ===== PANEL DE COMBAT (lado derecho) =====
 local CombatPanel = Instance.new("Frame")
 CombatPanel.Parent = PanelFrame
 CombatPanel.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-CombatPanel.Size = UDim2.new(0, 180, 0, 80)
-CombatPanel.Position = UDim2.new(0.5, 40, 0, 75)
+CombatPanel.Size = UDim2.new(0, 200, 0, 100)
+CombatPanel.Position = UDim2.new(0.5, 30, 0, 70)
 CombatPanel.Visible = false
 CombatPanel.BorderSizePixel = 2
 CombatPanel.BorderColor3 = Color3.fromRGB(200, 200, 200)
@@ -262,13 +258,13 @@ CombatTitle.TextSize = 14
 CombatTitle.Font = Enum.Font.SourceSansBold
 CombatTitle.TextXAlignment = Enum.TextXAlignment.Center
 
--- Texto informativo de Combat (sin valor)
+-- Texto informativo de Combat
 local CombatInfo = Instance.new("TextLabel")
 CombatInfo.Parent = CombatPanel
 CombatInfo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 CombatInfo.BackgroundTransparency = 1
 CombatInfo.Size = UDim2.new(0, 160, 0, 25)
-CombatInfo.Position = UDim2.new(0.5, -80, 0, 40)
+CombatInfo.Position = UDim2.new(0.5, -80, 0, 45)
 CombatInfo.Text = "Modo Combat"
 CombatInfo.TextColor3 = Color3.fromRGB(200, 200, 200)
 CombatInfo.TextSize = 14
@@ -316,6 +312,7 @@ local function toggleSpeedPanel()
     else
         SpeedPanel.Visible = true
         CombatPanel.Visible = false
+        SpeedInput.Text = "1"
     end
 end
 
@@ -461,4 +458,4 @@ game:GetService("UserInputService").InputEnded:Connect(function(input)
     end
 end)
 
-print("GUI con Speed y Combat en izquierda y slider de velocidad creada correctamente!")
+print("GUI con línea vertical más pegada y entrada de teclado para Speed creada correctamente!")
