@@ -7,22 +7,24 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- Marco principal (transparente) - Posicionado a la derecha y ajustado
+-- Marco principal (transparente) - Ajustado para verse completo en pantalla
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1 -- Totalmente transparente
-MainFrame.Size = UDim2.new(0, 250, 0, 380) -- Marco más ancho para texto completo
-MainFrame.Position = UDim2.new(1, -210, 0.4, -190) -- Ajustado para el nuevo tamaño
+MainFrame.Size = UDim2.new(0, 280, 0, 400) -- Marco más grande
+MainFrame.Position = UDim2.new(1, -290, 0.5, -200) -- Centrado verticalmente con margen
 
 -- Plantilla de botón
 ButtonTemplate.Parent = MainFrame
-ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Negro suave
+ButtonTemplate.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 ButtonTemplate.TextColor3 = Color3.fromRGB(255, 255, 255)
 ButtonTemplate.BorderSizePixel = 0
 ButtonTemplate.Font = Enum.Font.SourceSansBold
-ButtonTemplate.TextSize = 11 -- Tamaño de texto pequeño para que quepa
+ButtonTemplate.TextSize = 11
+ButtonTemplate.TextWrapped = true -- Envuelve el texto si es muy largo
+ButtonTemplate.TextScaled = false
 
--- Crear botones (5 filas x 2 columnas) con los textos especificados
+-- Datos de los botones
 local buttonsData = {
     "DROP BRAINROT", "AUTO LEFT",
     "AUTO BAT", "AUTO RIGHT",
@@ -32,9 +34,9 @@ local buttonsData = {
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 95, 0, 50) -- Botón más ancho para texto completo
-local spacing = 12
-local startX = 10
+local buttonSize = UDim2.new(0, 110, 0, 55) -- Botones más grandes
+local spacing = 15
+local startX = 15
 local startY = 15
 
 -- 5 filas y 2 columnas
@@ -44,7 +46,7 @@ for row = 0, 4 do
         btn.Parent = MainFrame
         
         -- Posición dentro del marco
-        local xPos = startX + (col * (buttonSize.X.Offset + spacing + 5))
+        local xPos = startX + (col * (buttonSize.X.Offset + spacing))
         local yPos = startY + (row * (buttonSize.Y.Offset + spacing))
         btn.Position = UDim2.new(0, xPos, 0, yPos)
         btn.Size = buttonSize
@@ -56,6 +58,11 @@ for row = 0, 4 do
         -- Estilo del botón
         btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         btn.BorderSizePixel = 0
+        
+        -- Esquinas redondeadas
+        local corner = Instance.new("UICorner")
+        corner.Parent = btn
+        corner.CornerRadius = UDim.new(0, 10)
         
         -- Efecto hover
         btn.MouseEnter:Connect(function()
@@ -76,11 +83,7 @@ for row = 0, 4 do
     end
 end
 
--- Aplicar esquinas redondeadas a todos los botones
-for _, btn in pairs(buttons) do
-    local corner = Instance.new("UICorner")
-    corner.Parent = btn
-    corner.CornerRadius = UDim.new(0, 10)
-end
+-- Asegurar que el marco se vea completo en pantalla
+MainFrame.ClipsDescendants = false
 
-print("GUI con textos personalizados creada correctamente!")
+print("GUI completa visible en pantalla!")
