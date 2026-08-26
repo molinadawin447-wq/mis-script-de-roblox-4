@@ -19,8 +19,8 @@ ScreenGui.Name = "CustomGUI"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 330, 0, 340) -- Ancho para 4 columnas
-MainFrame.Position = UDim2.new(1, -330, 0, 0)
+MainFrame.Size = UDim2.new(0, 320, 0, 340)
+MainFrame.Position = UDim2.new(1, -320, 0, 0)
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -29,7 +29,7 @@ MainFrameLeft.BackgroundTransparency = 1
 MainFrameLeft.Size = UDim2.new(0, 120, 0, 60)
 MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 
--- Plantilla de botón para los botones de la derecha
+-- Plantilla de botón para los botones de la derecha (cuadrados 70x70)
 local RightButtonTemplate = Instance.new("TextButton")
 RightButtonTemplate.Parent = MainFrame
 RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
@@ -37,9 +37,9 @@ RightButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
 RightButtonTemplate.BorderSizePixel = 3
 RightButtonTemplate.BorderColor3 = Color3.fromRGB(255, 255, 255)
 RightButtonTemplate.Font = Enum.Font.SourceSansBold
-RightButtonTemplate.TextSize = 14
-RightButtonTemplate.TextScaled = true -- Escala el texto para que quepa
+RightButtonTemplate.TextSize = 10
 RightButtonTemplate.TextWrapped = true
+RightButtonTemplate.TextScaled = false
 RightButtonTemplate.TextXAlignment = Enum.TextXAlignment.Center
 RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
 
@@ -53,35 +53,42 @@ ButtonTemplate.Font = Enum.Font.SourceSansBold
 ButtonTemplate.TextSize = 12
 ButtonTemplate.TextWrapped = false
 
--- ===== NUEVA DISTRIBUCIÓN: 2, 4, 4 =====
+-- ===== NUEVA DISTRIBUCIÓN DE BOTONES =====
+-- Fila 1: LAGGER CARRY, DROP BRAINROT, AUTO LEFT
+-- Fila 2: BAT TP, AUTO BAT, AUTO RIGHT
+-- Fila 3: TP DOWN, CARRY SPEED
+-- Fila 4: LAGGER MODE, INSTA RESET
 local rowData = {
-    { -- Fila 1: 2 botones (más a la izquierda)
+    { -- Fila 1 (3 botones)
         {"LAGGER", "CARRY"},
-        {"BAT", "TP"}
-    },
-    { -- Fila 2: 4 botones
         {"DROP", "BRAINROT"},
-        {"AUTO", "LEFT"},
+        {"AUTO", "LEFT"}
+    },
+    { -- Fila 2 (3 botones)
+        {"BAT", "TP"},
         {"AUTO", "BAT"},
         {"AUTO", "RIGHT"}
     },
-    { -- Fila 3: 4 botones
+    { -- Fila 3 (2 botones)
         {"TP", "DOWN"},
-        {"CARRY", "SPEED"},
+        {"CARRY", "SPEED"}
+    },
+    { -- Fila 4 (2 botones)
         {"LAGGER", "MODE"},
         {"INSTA", "RESET"}
     }
 }
 
 local buttons = {}
-local buttonSize = UDim2.new(0, 75, 0, 60) -- Un poco más ancho y menos alto para texto grande
-local spacingX = 4
+local buttonSize = UDim2.new(0, 70, 0, 70)
+local spacingX = 6
 local spacingY = 6
-local startX = 2  -- Mover a la izquierda
-local startY = 5
+local startX = 8
+local startY = 5 -- Más arriba
 
 -- Crear botones en el marco derecho
 for rowIndex, row in ipairs(rowData) do
+    local numCols = #row
     for colIndex, data in ipairs(row) do
         local btn = RightButtonTemplate:Clone()
         btn.Parent = MainFrame
@@ -673,4 +680,4 @@ end
 -- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: fila1 (2 botones) y fila2 (4 botones) movidas a la izquierda, letras más grandes y ajustadas.")
+print("GUI actualizada: LAGGER CARRY al lado izquierdo de DROP BRAINROT, BAT TP al lado izquierdo de AUTO BAT.")
