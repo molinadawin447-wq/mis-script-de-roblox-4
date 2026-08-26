@@ -15,12 +15,12 @@ local ButtonTemplate = Instance.new("TextButton")
 ScreenGui.Parent = player.PlayerGui
 ScreenGui.Name = "CustomGUI"
 
--- ===== MARCO DERECHO (botones principales) =====
+-- ===== MARCO DERECHO (botones principales) - PEGADO ARRIBA A LA DERECHA =====
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 MainFrame.BackgroundTransparency = 1
-MainFrame.Size = UDim2.new(0, 320, 0, 340)
-MainFrame.Position = UDim2.new(1, -320, 0, 0)
+MainFrame.Size = UDim2.new(0, 180, 0, 380) -- Marco más alto para botones cuadrados
+MainFrame.Position = UDim2.new(1, -180, 0, 0) -- Pegado a la derecha y arriba
 
 -- ===== MARCO IZQUIERDO (botón movible) =====
 MainFrameLeft.Parent = ScreenGui
@@ -29,7 +29,7 @@ MainFrameLeft.BackgroundTransparency = 1
 MainFrameLeft.Size = UDim2.new(0, 120, 0, 60)
 MainFrameLeft.Position = UDim2.new(0, 20, 0.35, -30)
 
--- Plantilla de botón para los botones de la derecha (cuadrados 70x70)
+-- Plantilla de botón para los botones de la derecha (cuadrados, pequeños, con bordes redondeados)
 local RightButtonTemplate = Instance.new("TextButton")
 RightButtonTemplate.Parent = MainFrame
 RightButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
@@ -43,7 +43,7 @@ RightButtonTemplate.TextScaled = false
 RightButtonTemplate.TextXAlignment = Enum.TextXAlignment.Center
 RightButtonTemplate.TextYAlignment = Enum.TextYAlignment.Center
 
--- Plantilla para el botón izquierdo
+-- Plantilla de botón para el botón izquierdo (Force.vs)
 ButtonTemplate.Parent = MainFrameLeft
 ButtonTemplate.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 ButtonTemplate.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -53,51 +53,49 @@ ButtonTemplate.Font = Enum.Font.SourceSansBold
 ButtonTemplate.TextSize = 12
 ButtonTemplate.TextWrapped = false
 
--- ===== NUEVA DISTRIBUCIÓN DE BOTONES =====
--- Fila 1: LAGGER CARRY, DROP BRAINROT, AUTO LEFT
--- Fila 2: BAT TP, AUTO BAT, AUTO RIGHT
--- Fila 3: TP DOWN, CARRY SPEED
--- Fila 4: LAGGER MODE, INSTA RESET
-local rowData = {
-    { -- Fila 1 (3 botones)
-        {"LAGGER", "CARRY"},
-        {"DROP", "BRAINROT"},
-        {"AUTO", "LEFT"}
-    },
-    { -- Fila 2 (3 botones)
-        {"BAT", "TP"},
-        {"AUTO", "BAT"},
-        {"AUTO", "RIGHT"}
-    },
-    { -- Fila 3 (2 botones)
-        {"TP", "DOWN"},
-        {"CARRY", "SPEED"}
-    },
-    { -- Fila 4 (2 botones)
-        {"LAGGER", "MODE"},
-        {"INSTA", "RESET"}
-    }
+-- ===== DATOS DE LOS BOTONES (DERECHA) con dos líneas =====
+local buttonsData = {
+    {"DROP", "BRAINROT"},
+    {"AUTO", "LEFT"},
+    {"AUTO", "BAT"},
+    {"AUTO", "RIGHT"},
+    {"TP", "DOWN"},
+    {"CARRY", "SPEED"},
+    {"LAGGER", "MODE"},
+    {"INSTA", "RESET"},
+    {"LAGGER", "CARRY"},
+    {"BAT", "TP"}
 }
 
+-- === INTERCAMBIO: los últimos dos botones pasan a la primera fila ===
+local temp = buttonsData[1]
+buttonsData[1] = buttonsData[9]
+buttonsData[9] = temp
+
+temp = buttonsData[2]
+buttonsData[2] = buttonsData[10]
+buttonsData[10] = temp
+
 local buttons = {}
-local buttonSize = UDim2.new(0, 70, 0, 70)
+local buttonSize = UDim2.new(0, 70, 0, 70) -- Botones cuadrados (70x70)
 local spacingX = 6
 local spacingY = 6
 local startX = 8
-local startY = 5 -- Más arriba
+local startY = 8
 
 -- Crear botones en el marco derecho
-for rowIndex, row in ipairs(rowData) do
-    local numCols = #row
-    for colIndex, data in ipairs(row) do
+for row = 0, 4 do
+    for col = 0, 1 do
         local btn = RightButtonTemplate:Clone()
         btn.Parent = MainFrame
         
-        local xPos = startX + ((colIndex - 1) * (buttonSize.X.Offset + spacingX))
-        local yPos = startY + ((rowIndex - 1) * (buttonSize.Y.Offset + spacingY))
+        local xPos = startX + (col * (buttonSize.X.Offset + spacingX))
+        local yPos = startY + (row * (buttonSize.Y.Offset + spacingY))
         btn.Position = UDim2.new(0, xPos, 0, yPos)
         btn.Size = buttonSize
         
+        local index = row * 2 + col + 1
+        local data = buttonsData[index]
         btn.Text = data[1] .. "\n" .. data[2]
         
         -- Esquinas redondeadas
@@ -680,4 +678,4 @@ end
 -- ===== INICIALIZACIÓN =====
 updateContent()
 updateToggle()
-print("GUI actualizada: LAGGER CARRY al lado izquierdo de DROP BRAINROT, BAT TP al lado izquierdo de AUTO BAT.")
+print("GUI actualizada: los botones 'LAGGER CARRY' y 'BAT TP' están ahora en la primera fila.")
